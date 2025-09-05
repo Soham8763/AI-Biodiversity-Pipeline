@@ -5,7 +5,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 gsap.registerPlugin(ScrollTrigger);
 const TOTAL_FRAMES = 703;
 const ANIMATION_END_PERCENTAGE = 100;
-
 const Landing = () => {
     const canvasRef = useRef(null);
     const [images, setImages] = useState([]);
@@ -123,7 +122,7 @@ const Landing = () => {
     }, [images]);
 
     return (
-        <div style={{ position: 'relative', height: '2500vh' }}> 
+        <div style={{ position: 'relative', height: '2500vh' }}>
             <canvas
                 ref={canvasRef}
                 style={{
@@ -171,7 +170,6 @@ const Landing = () => {
                 </div>
 
                 <div style={{ height: '400vh' }}></div>
-
                 <div style={{
                     height: '100vh',
                     display: 'flex',

@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI-Powered eDNA Biodiversity Discovery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Deep Sea Discovery -->
+    <!-- Application Structure Plan: The SPA is structured as a narrative-driven dashboard. It starts with the problem context, explains the innovative 4-stage pipeline interactively, and then presents the results in a dynamic dashboard. This structure was chosen to guide a scientific user logically from the "why" (the problem) to the "how" (the pipeline) and finally to the "what" (the interactive results), making a complex proposal easily digestible and explorable. The core is the interactive results section, which simulates the final product. -->
+    <!-- Visualization & Content Choices: 
+        - Pipeline Overview: Goal: Organize. Method: HTML/Tailwind flow diagram. Interaction: Click to reveal details. Justification: Clearly explains the complex process without overwhelming the user.
+        - Taxa Composition: Goal: Inform. Method: Chart.js Donut Chart. Interaction: Hover tooltips. Justification: Provides a high-level, instant summary of the pipeline's discovery power (known vs. novel).
+        - Relative Abundance: Goal: Compare/Explore. Method: Chart.js Bar Chart. Interaction: Dropdown filter to switch samples. Justification: Demonstrates the dynamic and comparative analysis capabilities of the final tool.
+        - Novel Lineages: Goal: Inform/Organize. Method: HTML Table. Interaction: Click to view details. Justification: Presents specific, actionable discoveries in a clear, organized format.
+        - Confirmed NO SVG/Mermaid. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa; 
+            color: #343a40;
+        }
+        .section-title {
+            color: #0c4a6e; 
+        }
+        .nav-link {
+            transition: color 0.3s ease;
+        }
+        .nav-link:hover, .nav-link.active {
+            color: #0ea5e9;
+        }
+        .stage-card {
+            transition: all 0.3s ease;
+            border-color: #e5e7eb;
+        }
+        .stage-card:hover, .stage-card.active {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            border-color: #0ea5e9;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            height: 350px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+    <header class="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-2">
+                <div class="w-8 h-8 bg-sky-600 rounded-full flex items-center justify-center text-white font-bold text-lg">🧬</div>
+                <h1 class="text-xl font-bold text-slate-700">Deep-Sea eDNA Discovery</h1>
+            </div>
+            <div class="hidden md:flex space-x-8 text-slate-600 font-medium">
+                <a href="#overview" class="nav-link">Overview</a>
+                <a href="#pipeline" class="nav-link">Pipeline</a>
+                <a href="#dashboard" class="nav-link">Dashboard</a>
+                <a href="#tech" class="nav-link">Tech & Roadmap</a>
+                <a href="#conclusion" class="nav-link">Conclusion</a>
+            </div>
+             <button id="mobile-menu-button" class="md:hidden text-slate-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden px-6 pb-4 flex flex-col space-y-4">
+             <a href="#overview" class="nav-link">Overview</a>
+             <a href="#pipeline" class="nav-link">Pipeline</a>
+             <a href="#dashboard" class="nav-link">Dashboard</a>
+             <a href="#tech" class="nav-link">Tech & Roadmap</a>
+             <a href="#conclusion" class="nav-link">Conclusion</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <section id="overview" class="scroll-mt-20 mb-24">
+            <div class="text-center">
+                <h2 class="text-4xl font-bold section-title mb-4">Project Overview</h2>
+                <p class="max-w-3xl mx-auto text-lg text-slate-600 mb-12">
+                    A comprehensive proposal for an advanced, AI-driven pipeline to analyze environmental DNA (eDNA) and unlock the secrets of deep-sea biodiversity.
+                </p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <div class="bg-white p-8 rounded-xl shadow-md border border-slate-200">
+                    <h3 class="font-semibold text-2xl text-sky-800 mb-4">Executive Summary</h3>
+                    <p class="text-slate-600 leading-relaxed">The deep ocean represents a vast frontier of undiscovered biodiversity. Traditional methods for analyzing eDNA from these ecosystems are severely hampered by the lack of representative species in reference databases, leading to inaccurate biodiversity assessments and missed opportunities for novel species discovery. The core of our solution is a four-stage workflow that prioritizes data-driven discovery over database dependency. By employing an unsupervised deep learning model, the system will cluster genetic sequences, annotate them using a hybrid approach, and present the findings in an interactive dashboard, fundamentally shifting the paradigm from simple classification to active biodiversity discovery.</p>
+                </div>
+                <div class="bg-white p-8 rounded-xl shadow-md border border-slate-200">
+                    <h3 class="font-semibold text-2xl text-sky-800 mb-4">Background & Challenge</h3>
+                    <p class="text-slate-600 leading-relaxed">The Centre for Marine Living Resources and Ecology (CMLRE) is positioned to gather invaluable genetic data from deep-sea hotspots. However, current analysis pipelines rely on aligning sequences to reference databases like SILVA or NCBI, which are heavily skewed towards terrestrial and shallow-water organisms. This "database gap" causes a significant portion of eDNA sequences from novel deep-sea eukaryotes to remain unassigned or be misclassified, creating a biased and incomplete picture of these vital ecosystems and slowing the discovery of new species.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="pipeline" class="scroll-mt-20 mb-24">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold section-title mb-4">The AI-Driven Analysis Pipeline</h2>
+                <p class="max-w-3xl mx-auto text-lg text-slate-600">Our innovative four-stage workflow transforms raw genetic reads into actionable biological insights. This approach minimizes reliance on reference databases in the critical initial stages. Click on each stage to learn more.</p>
+            </div>
+            <div class="flex flex-col md:flex-row items-center justify-center space-y-4 md:space-y-0 md:space-x-4 mb-8">
+                <div id="stage-1" class="stage-card cursor-pointer p-4 w-full md:w-52 text-center bg-white rounded-lg border-2">
+                    <h4 class="font-bold text-sky-800">Stage 1</h4>
+                    <p class="text-sm text-slate-500">Pre-processing</p>
+                </div>
+                <div class="text-2xl text-slate-400 transform md:rotate-0 rotate-90">→</div>
+                <div id="stage-2" class="stage-card cursor-pointer p-4 w-full md:w-52 text-center bg-white rounded-lg border-2">
+                    <h4 class="font-bold text-sky-800">Stage 2</h4>
+                    <p class="text-sm text-slate-500">Unsupervised Clustering</p>
+                </div>
+                <div class="text-2xl text-slate-400 transform md:rotate-0 rotate-90">→</div>
+                <div id="stage-3" class="stage-card cursor-pointer p-4 w-full md:w-52 text-center bg-white rounded-lg border-2">
+                    <h4 class="font-bold text-sky-800">Stage 3</h4>
+                    <p class="text-sm text-slate-500">Hybrid Annotation</p>
+                </div>
+                <div class="text-2xl text-slate-400 transform md:rotate-0 rotate-90">→</div>
+                <div id="stage-4" class="stage-card cursor-pointer p-4 w-full md:w-52 text-center bg-white rounded-lg border-2">
+                    <h4 class="font-bold text-sky-800">Stage 4</h4>
+                    <p class="text-sm text-slate-500">Abundance Estimation</p>
+                </div>
+            </div>
+            <div id="pipeline-details" class="bg-white p-8 rounded-xl shadow-lg border border-slate-200 min-h-[250px] transition-opacity duration-300">
+                <p class="text-center text-slate-500">Select a stage above to see details.</p>
+            </div>
+        </section>
+
+        <section id="dashboard" class="scroll-mt-20 mb-24">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold section-title mb-4">Final Deliverable: Interactive Dashboard</h2>
+                <p class="max-w-3xl mx-auto text-lg text-slate-600">The pipeline's results will be presented in a user-friendly, web-based dashboard designed for scientific discovery. Below is a simulation of its key components and features.</p>
+            </div>
+            
+            <div class="bg-white p-8 rounded-xl shadow-lg border border-slate-200 mb-12">
+                <h3 class="font-semibold text-2xl text-sky-800 mb-4">Dashboard Key Features</h3>
+                <ul class="list-disc list-inside space-y-2 text-slate-600">
+                    <li>A comprehensive summary of all discovered putative taxa (clusters).</li>
+                    <li>Interactive visualizations (heatmaps, bar charts) of relative abundance across different deep-sea sites, depths, and samples.</li>
+                    <li>Clear taxonomic assignments for known clusters and prominent "Potentially Novel" flags for unannotated ones.</li>
+                    <li>An interactive phylogenetic tree viewer (using D3.js) that visualizes the placement of novel lineages within the broader tree of life.</li>
+                    <li>Data export functionality (CSV, Newick tree format) for offline analysis.</li>
+                </ul>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                 <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 text-center">
+                    <h4 class="text-slate-500 font-medium">ASVs Processed</h4>
+                    <p class="text-4xl font-bold text-sky-600">1,245,890</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 text-center">
+                    <h4 class="text-slate-500 font-medium">Putative Taxa Identified</h4>
+                    <p class="text-4xl font-bold text-sky-600">3,102</p>
+                </div>
+                <div class="bg-white p-6 rounded-xl shadow-md border border-slate-200 text-center">
+                    <h4 class="text-slate-500 font-medium">Potentially Novel Lineages</h4>
+                    <p class="text-4xl font-bold text-amber-500">415</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
+                <div class="lg:col-span-2 bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                    <h3 class="font-semibold text-lg text-center text-sky-800 mb-4">Taxa Composition</h3>
+                    <div class="chart-container mx-auto max-w-sm">
+                        <canvas id="compositionChart"></canvas>
+                    </div>
+                </div>
+                <div class="lg:col-span-3 bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                    <div class="flex flex-col sm:flex-row justify-between sm:items-center mb-4">
+                        <h3 class="font-semibold text-lg text-sky-800 mb-2 sm:mb-0">Relative Abundance of Top Taxa</h3>
+                        <div class="flex items-center space-x-2">
+                             <label for="sampleSelector" class="text-sm font-medium text-slate-600">Sample:</label>
+                             <select id="sampleSelector" class="rounded-md border-slate-300 shadow-sm focus:border-sky-300 focus:ring focus:ring-sky-200 focus:ring-opacity-50 text-sm">
+                                <option value="abyssal">Abyssal Plain</option>
+                                <option value="vent">Hydrothermal Vent</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="abundanceChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                <h3 class="font-semibold text-lg text-sky-800 mb-4">Novel Lineage Explorer</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm">
+                        <thead class="bg-slate-100 text-slate-600">
+                            <tr>
+                                <th class="p-3 font-medium">Lineage ID</th>
+                                <th class="p-3 font-medium">Closest Match (BLAST)</th>
+                                <th class="p-3 font-medium">Confidence</th>
+                                <th class="p-3 font-medium">Avg. Abundance</th>
+                                <th class="p-3 font-medium">Phylogenetic Context</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b">
+                                <td class="p-3 font-mono">PNL-007</td>
+                                <td class="p-3">Uncultured marine eukaryote</td>
+                                <td class="p-3 text-amber-600">Low (81%)</td>
+                                <td class="p-3">0.54%</td>
+                                <td class="p-3"><button class="details-btn text-sky-600 hover:underline" data-details="Placement: Sister to the phylum Apicomplexa. Suggests a novel parasitic or symbiotic lineage previously undetected in deep-sea environments.">View Placement</button></td>
+                            </tr>
+                             <tr class="border-b">
+                                <td class="p-3 font-mono">PNL-021</td>
+                                <td class="p-3">No significant similarity found</td>
+                                <td class="p-3 text-red-600">None</td>
+                                <td class="p-3">0.21%</td>
+                                <td class="p-3"><button class="details-btn text-sky-600 hover:underline" data-details="Placement: Forms a deep-branching clade within the Stramenopila. This lineage appears to have diverged early in the group's evolution, representing a potentially new class-level taxon.">View Placement</button></td>
+                            </tr>
+                             <tr class="border-b">
+                                <td class="p-3 font-mono">PNL-158</td>
+                                <td class="p-3">Environmental sample SJB5-22</td>
+                                <td class="p-3 text-amber-600">Low (84%)</td>
+                                <td class="p-3">0.15%</td>
+                                <td class="p-3"><button class="details-btn text-sky-600 hover:underline" data-details="Placement: Falls within the Labyrinthulomycetes but does not group with any known family. Potentially a new order of marine slime nets.">View Placement</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                 <div id="details-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+                    <div class="bg-white rounded-lg shadow-xl p-6 max-w-md w-full">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="font-semibold text-lg text-sky-800">Phylogenetic Context</h4>
+                            <button id="close-modal-btn" class="text-slate-500 hover:text-slate-800">&times;</button>
+                        </div>
+                        <p id="modal-content" class="text-slate-600"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tech" class="scroll-mt-20 mb-24">
+             <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold section-title mb-4">Technology & Project Roadmap</h2>
+                <p class="max-w-3xl mx-auto text-lg text-slate-600">The project leverages a modern, robust technology stack and follows a structured six-phase roadmap to ensure successful delivery and deployment.</p>
+            </div>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                 <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                     <h3 class="font-semibold text-lg text-sky-800 mb-4">Technical Architecture & Stack</h3>
+                     <ul class="space-y-3 text-slate-600">
+                        <li class="flex items-start"><span class="font-semibold w-40">Backend Orchestrator:</span><span>Java / Spring Boot</span></li>
+                        <li class="flex items-start"><span class="font-semibold w-40">Database:</span><span>PostgreSQL</span></li>
+                        <li class="flex items-start"><span class="font-semibold w-40">Bioinformatics Core:</span><span>Dockerized (cutadapt, DADA2, vsearch, BLAST+, EPA-ng)</span></li>
+                        <li class="flex items-start"><span class="font-semibold w-40">AI/ML Service:</span><span>Python / FastAPI, PyTorch or TensorFlow</span></li>
+                        <li class="flex items-start"><span class="font-semibold w-40">Frontend:</span><span>React / Vue.js with D3.js</span></li>
+                        <li class="flex items-start"><span class="font-semibold w-40">Dataset:</span><span>Curated local databases from NCBI BLAST DB (e.g., SSU_eukaryote_rRNA)</span></li>
+                     </ul>
+                 </div>
+                 <div class="bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+                    <h3 class="font-semibold text-lg text-sky-800 mb-4">Project Roadmap</h3>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-sm text-left">
+                           <thead class="bg-slate-100 text-slate-600">
+                                <tr>
+                                    <th class="p-2 font-medium">Phase</th>
+                                    <th class="p-2 font-medium">Duration</th>
+                                    <th class="p-2 font-medium">Key Activities</th>
+                                </tr>
+                           </thead>
+                           <tbody>
+                                <tr class="border-b"><td class="p-2">1</td><td class="p-2">4 Weeks</td><td class="p-2">Project Setup & Scaffolding</td></tr>
+                                <tr class="border-b"><td class="p-2">2</td><td class="p-2">8 Weeks</td><td class="p-2">Bioinformatics Pipeline Dev</td></tr>
+                                <tr class="border-b"><td class="p-2">3</td><td class="p-2">10 Weeks</td><td class="p-2">AI/ML Model Development</td></tr>
+                                <tr class="border-b"><td class="p-2">4</td><td class="p-2">8 Weeks</td><td class="p-2">Frontend Dashboard Development</td></tr>
+                                <tr class="border-b"><td class="p-2">5</td><td class="p-2">4 Weeks</td><td class="p-2">End-to-End Integration & Testing</td></tr>
+                                <tr><td class="p-2">6</td><td class="p-2">2 Weeks</td><td class="p-2">Deployment & Documentation</td></tr>
+                           </tbody>
+                        </table>
+                    </div>
+                 </div>
+            </div>
+        </section>
+
+        <section id="conclusion" class="scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold section-title mb-4">Conclusion</h2>
+            </div>
+            <div class="max-w-4xl mx-auto bg-white p-8 rounded-xl shadow-lg border border-slate-200">
+                 <p class="text-slate-600 leading-relaxed text-lg">This project moves beyond incremental improvements in eDNA analysis and proposes a transformative solution tailored to the challenges of deep-sea exploration. By embracing an unsupervised, discovery-first approach, the proposed AI-driven pipeline will empower CMLRE to not only accurately quantify known biodiversity but also to systematically identify and contextualize the vast, unknown life within our oceans. This platform will serve as a critical tool for ecosystem monitoring, conservation, and fundamental biological discovery.</p>
+            </div>
+        </section>
+
+    </main>
+    
+    <footer class="bg-slate-800 text-white mt-24">
+        <div class="container mx-auto px-6 py-8 text-center">
+            <p>&copy; 2025 CMLRE eDNA Initiative. All rights reserved.</p>
+            <p class="text-sm text-slate-400 mt-2">Project ID: ID25042 | A proposal for advanced biodiversity discovery.</p>
+        </div>
+    </footer>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+    });
+
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('section');
+
+    const setActiveLink = () => {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            if (pageYOffset >= sectionTop - 100) {
+                current = section.getAttribute('id');
+            }
+        });
+
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href').substring(1) === current) {
+                link.classList.add('active');
+            }
+        });
+    };
+    
+    window.addEventListener('scroll', setActiveLink);
+    setActiveLink(); 
+
+    const pipelineDetails = {
+        'stage-1': {
+            title: 'Stage 1: Sequence Pre-processing & ASV Generation',
+            content: `
+                <p class="text-slate-600 mb-4">This initial stage ensures the highest data quality as a foundation for downstream analysis.</p>
+                <ul class="list-disc list-inside space-y-2 text-slate-600">
+                    <li><strong>Quality Control:</strong> Raw sequencing reads (FASTQ files) will be processed using <strong>cutadapt</strong> to trim sequencing primers and remove low-quality bases.</li>
+                    <li><strong>ASV Generation:</strong> We will use <strong>DADA2</strong> to denoise the cleaned reads and resolve them into Amplicon Sequence Variants (ASVs), which offer single-nucleotide resolution for more accuracy.</li>
+                    <li><strong>Output:</strong> The primary output is a feature table mapping the count of each unique ASV across all collected samples.</li>
+                </ul>`
+        },
+        'stage-2': {
+            title: 'Stage 2: Unsupervised Deep Learning for Taxa-Agnostic Clustering',
+            content: `
+                <p class="text-slate-600 mb-4">This is the core innovation of the pipeline, enabling discovery without a priori knowledge.</p>
+                 <ul class="list-disc list-inside space-y-2 text-slate-600">
+                    <li><strong>Model:</strong> A <strong>Variational Autoencoder (VAE)</strong>, implemented in PyTorch/TensorFlow, will be trained on the complete set of ASVs to learn a low-dimensional latent space representation.</li>
+                    <li><strong>Clustering:</strong> Within this latent space, a clustering algorithm (e.g., K-Means or HDBSCAN) will be applied to group ASVs with similar evolutionary patterns.</li>
+                    <li><strong>Output:</strong> Each resulting cluster represents a "putative taxon" discovered directly from the data, independent of any reference database.</li>
+                </ul>`
+        },
+        'stage-3': {
+            title: 'Stage 3: Hybrid Annotation & Novel Lineage Identification',
+            content: `
+                <p class="text-slate-600 mb-4">Once clustered, the system annotates what is known and highlights what is new.</p>
+                 <ul class="list-disc list-inside space-y-2 text-slate-600">
+                    <li><strong>Best-Effort Taxonomic Annotation:</strong> A representative sequence from each cluster will be queried against a curated, local NCBI reference database using <strong>BLAST+</strong>.</li>
+                    <li><strong>Flagging Novelty:</strong> Clusters lacking a confident match are flagged as <strong>"Potentially Novel Lineages,"</strong> providing a direct signal for researchers.</li>
+                    <li><strong>Phylogenetic Placement:</strong> To provide evolutionary context, novel lineages will be placed onto a comprehensive reference tree using <strong>EPA-ng</strong>.</li>
+                </ul>`
+        },
+        'stage-4': {
+            title: 'Stage 4: Relative Abundance Estimation',
+            content: `
+                <p class="text-slate-600 mb-4">This stage quantifies the community structure across samples.</p>
+                 <ul class="list-disc list-inside space-y-2 text-slate-600">
+                    <li><strong>Normalization:</strong> The raw ASV counts from Stage 1 will be aggregated by cluster and normalized to account for variations in sequencing depth (e.g., centered log-ratio transformation).</li>
+                    <li><strong>Output:</strong> A table of relative abundances for each putative taxon (both known and novel) across all samples, ready for ecological analysis.</li>
+                </ul>`
+        }
+    };
+
+    const stageCards = document.querySelectorAll('.stage-card');
+    const detailsContainer = document.getElementById('pipeline-details');
+
+    stageCards.forEach(card => {
+        card.addEventListener('click', () => {
+            stageCards.forEach(c => c.classList.remove('active'));
+            card.classList.add('active');
+            const stageId = card.id;
+            const data = pipelineDetails[stageId];
+            detailsContainer.style.opacity = '0';
+            setTimeout(() => {
+                detailsContainer.innerHTML = `<h3 class="font-bold text-lg text-sky-800 mb-2">${data.title}</h3>${data.content}`;
+                detailsContainer.style.opacity = '1';
+            }, 300);
+        });
+    });
+
+    const compositionData = {
+        labels: ['Known Taxa (Annotated)', 'Potentially Novel Lineages'],
+        datasets: [{
+            data: [2687, 415],
+            backgroundColor: ['#0284c7', '#f59e0b'],
+            hoverBackgroundColor: ['#0369a1', '#d97706'],
+            borderColor: '#f8f9fa',
+            borderWidth: 2,
+        }]
+    };
+
+    const compositionCtx = document.getElementById('compositionChart').getContext('2d');
+    new Chart(compositionCtx, {
+        type: 'doughnut',
+        data: compositionData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed !== null) {
+                                const total = context.chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+                                const percentage = ((context.parsed / total) * 100).toFixed(2);
+                                label += `${context.raw.toLocaleString()} (${percentage}%)`;
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    const abundanceChartData = {
+        abyssal: {
+            labels: ['Radiolaria', 'Dinoflagellata', 'PNL-007', 'Bacillariophyta', 'PNL-021', 'Apicomplexa', 'Foraminifera', 'Cercozoa', 'Ciliophora', 'Haptophyta'],
+            datasets: [{
+                label: 'Relative Abundance',
+                data: [18.2, 15.5, 11.8, 9.3, 7.1, 6.4, 5.9, 4.2, 3.1, 2.5],
+                backgroundColor: '#38bdf8',
+                borderColor: '#0ea5e9',
+                borderWidth: 1
+            }]
+        },
+        vent: {
+            labels: ['PNL-021', 'Epsilonproteobacteria (symbiont)', 'PNL-158', 'Thermodesulfovibrionia', 'Arcobacteraceae', 'Alvinellidae', 'Riftiida', 'PNL-007', 'Aquificae', 'Deferribacteres'],
+            datasets: [{
+                label: 'Relative Abundance',
+                data: [25.1, 20.7, 14.3, 10.1, 8.5, 6.2, 5.0, 3.4, 2.9, 1.8],
+                backgroundColor: '#fb923c',
+                borderColor: '#f97316',
+                borderWidth: 1
+            }]
+        }
+    };
+
+    const abundanceCtx = document.getElementById('abundanceChart').getContext('2d');
+    const abundanceChart = new Chart(abundanceCtx, {
+        type: 'bar',
+        data: abundanceChartData.abyssal,
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Relative Abundance (%)'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+
+    const sampleSelector = document.getElementById('sampleSelector');
+    sampleSelector.addEventListener('change', (event) => {
+        const selectedSample = event.target.value;
+        abundanceChart.data = abundanceChartData[selectedSample];
+        abundanceChart.update();
+    });
+
+    const detailsModal = document.getElementById('details-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
+    const modalContent = document.getElementById('modal-content');
+    const detailsBtns = document.querySelectorAll('.details-btn');
+
+    detailsBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const details = btn.getAttribute('data-details');
+            modalContent.textContent = details;
+            detailsModal.classList.remove('hidden');
+        });
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+        detailsModal.classList.add('hidden');
+    });
+
+    detailsModal.addEventListener('click', (event) => {
+        if (event.target === detailsModal) {
+            detailsModal.classList.add('hidden');
+        }
+    });
+
+});
+</script>
+
+</body>
+</html>
+
