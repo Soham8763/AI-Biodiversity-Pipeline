@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-
 gsap.registerPlugin(ScrollTrigger);
 const TOTAL_FRAMES = 703;
 const ANIMATION_END_PERCENTAGE = 100;
@@ -9,7 +8,6 @@ const Landing = () => {
     const canvasRef = useRef(null);
     const [images, setImages] = useState([]);
     const [loadedCount, setLoadedCount] = useState(0);
-
     useEffect(() => {
         console.log('Loading images...');
         const frameImages = [];
