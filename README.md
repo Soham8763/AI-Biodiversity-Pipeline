@@ -1,8 +1,6 @@
 AI-Driven Pipeline for Deep-Sea Biodiversity Discovery
 ======================================================
 
-**Project ID:** ID25042
-
 **Prepared for:** Centre for Marine Living Resources and Ecology (CMLRE)
 
 1\. Introduction
@@ -12,7 +10,24 @@ This project provides an end-to-end, AI-driven pipeline to discover and analyze 
 
 The core of this pipeline uses a Variational Autoencoder (VAE) for taxa-agnostic clustering of Amplicon Sequence Variants (ASVs), allowing for the discovery of microbial groups without prior taxonomic knowledge.
 
-2\. The Pipeline Workflow
+2\. Development Status: 🚧 In Progress
+--------------------------------------
+
+> **Please Note:** This project is currently under active construction.
+>
+> -   **Data Pre-processing:** Complete.
+>
+>
+> -   **AI Model (VAE):** Undergoing testing. Results and model files will be updated here soon.
+>
+>
+> -   **Backend & Frontend:** Implementation has not yet started.
+>
+>
+>
+> Thank you for your interest! Check back for updates.
+
+3\. The Pipeline Workflow
 -------------------------
 
 The project is divided into two main parts: a core data processing pipeline and an interactive discovery dashboard.
@@ -33,12 +48,12 @@ The project is divided into two main parts: a core data processing pipeline and 
 
 2.  **Frontend Application**: A responsive user interface built with **React (or Vue.js)** and **D3.js** allows for intuitive data exploration through interactive heatmaps, charts, and a dynamic phylogenetic tree viewer.
 
-3\. Technology Stack
+4\. Technology Stack
 --------------------
 
 | **Area** | **Technologies & Tools** | | **Data Processing** | `cutadapt`, `R (DADA2)`, `Python` | | **AI / ML** | `PyTorch` / `TensorFlow`, `HDBSCAN` | | **Bioinformatics** | `BLAST+`, `EPA-ng` | | **Backend** | `Java`, `Spring Boot`, `PostgreSQL` | | **Frontend** | `React` / `Vue.js`, `D3.js`, `JavaScript`, `HTML/CSS` |
 
-4\. Project Structure
+5\. Project Structure
 ---------------------
 
 The project uses a standardized folder structure to manage the data workflow:
@@ -57,7 +72,7 @@ The project uses a standardized folder structure to manage the data workflow:
 
 ```
 
-5\. Getting Started
+6\. Getting Started
 -------------------
 
 ### Prerequisites
@@ -101,12 +116,12 @@ The project uses a standardized folder structure to manage the data workflow:
 
 8.  Open your browser to `http://localhost:3000` to view the dashboard.
 
-6\. Contributing
+7\. Contributing
 ----------------
 
 Contributions are welcome! Please feel free to submit a pull request or open an issue.
 
-7\. License
+8\. License
 -----------
 
 This project is licensed under the MIT License. See the `LICENSE` file for details.
