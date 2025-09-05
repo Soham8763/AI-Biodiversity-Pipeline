@@ -1,7 +1,40 @@
-mkdir -p 01_raw_data
-cd 01_raw_data
-# Download raw sequencing data using SRA Toolkit
+#!/bin/bash
 
-echo "Downloading raw sequencing data..."
+# Exit immediately if a command fails
+set -e
 
-fastq-dump --split-files --gzip --outdir fastq_files SRR123456
+# --- Configuration ---
+# The name of the file containing the list of SRR accessions
+SRR_LIST_FILE="srr_list.txt"
+
+# The directory where raw data will be saved
+OUTPUT_DIR="01_raw_data"
+
+# --- Script Logic ---
+
+# Check if the list file exists
+if [ ! -f "$SRR_LIST_FILE" ]; then
+    echo "Error: List file not found at '$SRR_LIST_FILE'"
+    exit 1
+fi
+
+# Create the output directory if it doesn't exist
+mkdir -p "$OUTPUT_DIR"
+
+echo "Starting download of all samples listed in '$SRR_LIST_FILE'..."
+
+# Read the file line by line and download each accession
+while IFS= read -r sra_id || [[ -n "$sra_id" ]]; do
+    # Skip empty lines
+    if [ -z "$sra_id" ]; then
+        continue
+    fi
+    
+    echo "Downloading ${sra_id}..."
+    fastq-dump --split-files --gzip --outdir "$OUTPUT_DIR" "${sra_id}"
+    echo "Downloaded ${sra_id} to ${OUTPUT_DIR}/${sra_id}_1.fastq.gz and ${OUTPUT_DIR}/${sra_id}_2.fastq.gz"
+    echo ""
+
+done < "$SRR_LIST_FILE"
+
+echo "All downloads complete."
