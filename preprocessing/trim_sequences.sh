@@ -1,26 +1,60 @@
 #!/bin/bash
 
-# Exit immediately if a command exits with a non-zero status.
+# Exit immediately if a command fails.
 set -e
 
-echo "Starting primer trimming and quality filtering..."
+# --- Configuration ---
+# The file containing the list of SRR accessions to process
+SRR_LIST_FILE="srr_list.txt"
 
-# 1. Create the output directory if it doesn't exist
-mkdir -p 02_trimmed_reads
+# The directories for input and output
+RAW_DIR="01_raw_data"
+TRIMMED_DIR="02_trimmed_reads"
 
-# 2. Define primer sequences
+# Primer sequences
 FWD_PRIMER="GTCGGTAAAACTCGTGCCAGC"
 REV_PRIMER="CATAGTGGGGTATCTAATCCCAGTTTG"
 
-# 3. Run cutadapt on all sample pairs
-echo "Processing Nova Scotia samples..."
-cutadapt -a $FWD_PRIMER -A $REV_PRIMER -o 02_trimmed_reads/SRR14899739_1.fastq.gz -p 02_trimmed_reads/SRR14899739_2.fastq.gz --minimum-length 100 --max-n 0 -q 20,20 01_raw_data/SRR14899739_1.fastq.gz 01_raw_data/SRR14899739_2.fastq.gz
-cutadapt -a $FWD_PRIMER -A $REV_PRIMER -o 02_trimmed_reads/SRR14899738_1.fastq.gz -p 02_trimmed_reads/SRR14899738_2.fastq.gz --minimum-length 100 --max-n 0 -q 20,20 01_raw_data/SRR14899738_1.fastq.gz 01_raw_data/SRR14899738_2.fastq.gz
-cutadapt -a $FWD_PRIMER -A $REV_PRIMER -o 02_trimmed_reads/SRR14899737_1.fastq.gz -p 02_trimmed_reads/SRR14899737_2.fastq.gz --minimum-length 100 --max-n 0 -q 20,20 01_raw_data/SRR14899737_1.fastq.gz 01_raw_data/SRR14899737_2.fastq.gz
+# --- Script Logic ---
 
-echo "Processing British Columbia samples..."
-cutadapt -a $FWD_PRIMER -A $REV_PRIMER -o 02_trimmed_reads/SRR14899748_1.fastq.gz -p 02_trimmed_reads/SRR14899748_2.fastq.gz --minimum-length 100 --max-n 0 -q 20,20 01_raw_data/SRR14899748_1.fastq.gz 01_raw_data/SRR14899748_2.fastq.gz
-cutadapt -a $FWD_PRIMER -A $REV_PRIMER -o 02_trimmed_reads/SRR14899747_1.fastq.gz -p 02_trimmed_reads/SRR14899747_2.fastq.gz --minimum-length 100 --max-n 0 -q 20,20 01_raw_data/SRR14899747_1.fastq.gz 01_raw_data/SRR14899747_2.fastq.gz
-cutadapt -a $FWD_PRIMER -A $REV_PRIMER -o 02_trimmed_reads/SRR14899746_1.fastq.gz -p 02_trimmed_reads/SRR14899746_2.fastq.gz --minimum-length 100 --max-n 0 -q 20,20 01_raw_data/SRR14899746_1.fastq.gz 01_raw_data/SRR14899746_2.fastq.gz
+echo "Starting primer trimming and quality filtering for all samples in '$SRR_LIST_FILE'..."
 
-echo "Trimming complete! Cleaned files are in the 02_trimmed_reads directory."
+# Create the output directory if it doesn't exist
+mkdir -p "$TRIMMED_DIR"
+
+# Check if the list file exists
+if [ ! -f "$SRR_LIST_FILE" ]; then
+    echo "Error: List file not found at '$SRR_LIST_FILE'"
+    exit 1
+fi
+
+# Count the number of samples to process for user feedback
+SAMPLE_COUNT=$(wc -l < "$SRR_LIST_FILE")
+echo "Found $SAMPLE_COUNT samples to process."
+
+# Read the file line by line and run cutadapt on each accession
+CURRENT_SAMPLE=1
+while IFS= read -r sra_id || [[ -n "$sra_id" ]]; do
+    # Skip empty lines
+    if [ -z "$sra_id" ]; then
+        continue
+    fi
+
+    echo "Processing sample $CURRENT_SAMPLE of $SAMPLE_COUNT: ${sra_id}"
+
+    # Define the input and output file paths for this specific sample
+    INPUT_R1="${RAW_DIR}/${sra_id}_1.fastq.gz"
+    INPUT_R2="${RAW_DIR}/${sra_id}_2.fastq.gz"
+    OUTPUT_R1="${TRIMMED_DIR}/${sra_id}_1.fastq.gz"
+    OUTPUT_R2="${TRIMMED_DIR}/${sra_id}_2.fastq.gz"
+
+    # Run cutadapt with the improved parameters for better data retention
+    cutadapt -a "$FWD_PRIMER" -A "$REV_PRIMER" \
+             -o "$OUTPUT_R1" -p "$OUTPUT_R2" \
+             --minimum-length 75 --max-n 1 -q 20,20 \
+             "$INPUT_R1" "$INPUT_R2"
+
+    ((CURRENT_SAMPLE++))
+done < "$SRR_LIST_FILE"
+
+echo "Trimming complete! All cleaned files are in the '$TRIMMED_DIR' directory."
