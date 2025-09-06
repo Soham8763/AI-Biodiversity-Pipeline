@@ -21,7 +21,9 @@ fi
 # Create the output directory if it doesn't exist
 mkdir -p "$OUTPUT_DIR"
 
-echo "Starting download of all samples listed in '$SRR_LIST_FILE'..."
+echo "Starting download process for all samples in '$SRR_LIST_FILE'..."
+echo "Existing files will be skipped."
+echo ""
 
 # Read the file line by line and download each accession
 while IFS= read -r sra_id || [[ -n "$sra_id" ]]; do
@@ -30,11 +32,19 @@ while IFS= read -r sra_id || [[ -n "$sra_id" ]]; do
         continue
     fi
     
-    echo "Downloading ${sra_id}..."
-    fastq-dump --split-files --gzip --outdir "$OUTPUT_DIR" "${sra_id}"
-    echo "Downloaded ${sra_id} to ${OUTPUT_DIR}/${sra_id}_1.fastq.gz and ${OUTPUT_DIR}/${sra_id}_2.fastq.gz"
+    # Define the expected output file path
+    EXPECTED_FILE="${OUTPUT_DIR}/${sra_id}_1.fastq.gz"
+    
+    # Check if the first FASTQ file already exists
+    if [ -f "$EXPECTED_FILE" ]; then
+        echo "File for ${sra_id} already exists. Skipping."
+    else
+        echo "Downloading ${sra_id}..."
+        fastq-dump --split-files --gzip --outdir "$OUTPUT_DIR" "${sra_id}"
+        echo "Downloaded ${sra_id} to ${OUTPUT_DIR}"
+    fi
     echo ""
 
 done < "$SRR_LIST_FILE"
 
-echo "All downloads complete."
+echo "All downloads are complete."
