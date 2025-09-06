@@ -1,0 +1,57 @@
+Step 1: Search the SRA Database
+Go to the main SRA search page: https://www.ncbi.nlm.nih.gov/sra
+
+Use specific keywords related to your interest. The more specific you are, the better the results will be. Try combinations like:
+
+eDNA metabarcoding 12S fish
+
+environmental DNA marine Illumina MiSeq
+
+12S coastal water biodiversity
+
+Look for study titles that seem relevant to your project.
+
+Step 2: Vet the Results (The Quality Check)
+This is the most important part. Before you download any files, investigate the study to make sure it's suitable.
+
+Find the Associated Publication: Click on a promising study. Find its BioProject ID (it looks like PRJNA...). Search for that ID on Google Scholar or PubMed to find the paper, just like you did before. If you cannot find a paper, it's best to skip that dataset.
+
+Read the BioProject Abstract: The abstract should clearly describe the study's goals, the genetic marker used (e.g., "12S rRNA gene"), and the sequencing platform (e.g., "Illumina MiSeq").
+
+Inspect the Samples: Click on the number of "Runs" to open the Run Selector. Quickly check a few things:
+
+Platform: Is it ILLUMINA?
+
+LibraryLayout: Is it PAIRED?
+
+File Size (Bytes): Scan the column. Are the file sizes reasonably large (e.g., >20 Mb) and consistent? A project with mostly tiny files (<5 Mb) is a red flag.
+
+Step 3: Verify the Primers Before Downloading
+This is the final check. Once you have the publication for a promising dataset:
+
+Open the paper's PDF and go to the "Methods" section.
+
+Find the exact forward and reverse primer sequences and the expected amplicon size.
+
+The Golden Rule: If you cannot find the primer sequences in the paper, find another dataset. This step is crucial to avoid repeating the problems you just solved.
+
+Step 4: Download and Test
+Once you've found a promising dataset and its primers:
+
+Select 3-5 of the largest SRR runs from the new project.
+
+Create a new srr_list.txt with these new SRR numbers.
+
+Update the FWD_PRIMER and REV_PRIMER variables in your trim_sequences.sh script.
+
+Update the --minimum-length in trim_sequences.sh to a value appropriate for the new amplicon size (e.g., ~20-30 bp shorter than the expected length).
+
+Run your pipeline on just these few samples to confirm that a high percentage of reads pass the trimming step.
+
+
+
+
+
+
+
+
