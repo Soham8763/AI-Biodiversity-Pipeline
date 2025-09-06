@@ -12,8 +12,13 @@ DOWNLOAD_SCRIPT="get_raw_data.sh"
 TRIM_SCRIPT="trim_sequences.sh"
 DADA2_SCRIPT="run_dada2.R"
 BIO_ENV="deepsea-pipeline"
+LOG_DIR="logs"
 
 # --- Script Execution ---
+
+TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
+
+mkdir -p "$LOG_DIR"
 
 echo "--- Activating Conda Environment: $BIO_ENV ---"
 eval "$(conda shell.bash hook)"
@@ -28,31 +33,19 @@ echo "Permissions set."
 echo ""
 
 echo "--- STEP 1: RUNNING DOWNLOAD SCRIPT ---"
-./"$DOWNLOAD_SCRIPT"
+./"$DOWNLOAD_SCRIPT" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_01_download.log"
 echo "Download script finished."
 echo ""
 
 echo "--- STEP 2: RUNNING TRIMMING SCRIPT ---"
-./"$TRIM_SCRIPT"
+./"$TRIM_SCRIPT" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_02_trimming.log"
 echo "Trimming script finished."
 echo ""
 
 echo "--- STEP 3: RUNNING DADA2 SCRIPT ---"
-Rscript "$DADA2_SCRIPT"
+Rscript "$DADA2_SCRIPT" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_03_dada2.log"
 echo "DADA2 script finished."
 echo ""
 
 echo "--- FULL PIPELINE COMPLETE ---"
-```
-
-### How to Use
-
-1.  **Save this file** as `run_all.sh` in your main project directory.
-2.  **Give this one script execute permissions** (you only have to do this once):
-    ```bash
-    chmod +x run_all.sh
-    ```
-3.  **Run it:**
-    ```bash
-    ./run_all.sh
-    
+echo "All logs for this run (ID: ${TIMESTAMP}) have been saved in the '$LOG_DIR' directory."
