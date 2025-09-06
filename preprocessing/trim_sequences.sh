@@ -10,9 +10,10 @@ SRR_LIST_FILE="srr_list.txt"
 # The directories for input and output
 RAW_DIR="01_raw_data"
 TRIMMED_DIR="02_trimmed_reads"
+TEMP_DIR="temp_trimmed"
 
 # Primer sequences
-FWD_PRIMER="GTCGGTAAAACTCGTGCCAGC"
+FWD_PRIMER="GTCGGTTAAAACTCGTGCCAGC"
 REV_PRIMER="CATAGTGGGGTATCTAATCCCAGTTTG"
 
 # --- Script Logic ---
@@ -21,6 +22,7 @@ echo "Starting primer trimming and quality filtering for all samples in '$SRR_LI
 
 # Create the output directory if it doesn't exist
 mkdir -p "$TRIMMED_DIR"
+mkdir -p "$TEMP_DIR"
 
 # Check if the list file exists
 if [ ! -f "$SRR_LIST_FILE" ]; then
@@ -51,10 +53,38 @@ while IFS= read -r sra_id || [[ -n "$sra_id" ]]; do
     # Run cutadapt with the improved parameters for better data retention
     cutadapt -a "$FWD_PRIMER" -A "$REV_PRIMER" \
              -o "$OUTPUT_R1" -p "$OUTPUT_R2" \
-             --minimum-length 75 --max-n 1 -q 20,20 \
+             --minimum-length 25 --max-n 1 -q 20,20 \
              "$INPUT_R1" "$INPUT_R2"
+
+    # --- Step 2: NEW - Filter for Valid DNA Characters ---
+    # This step uses awk to check that every character in the sequence line (line 2 of every 4)
+    # is one of A, C, G, or T. It keeps read pairs in sync.
+    echo "[2/2] Filtering for valid ACGT characters..."
+    FINAL_OUTPUT_R1="${TRIMMED_DIR}/${sra_id}_1.fastq.gz"
+    FINAL_OUTPUT_R2="${TRIMMED_DIR}/${sra_id}_2.fastq.gz"
+    
+    paste <(zcat "$TEMP_OUTPUT_R1") <(zcat "$TEMP_OUTPUT_R2") | \
+    awk 'BEGIN {FS="\t"; OFS="\t"} {
+        # Store the 4 lines for a read pair
+        lines[NR % 4, 1] = $1;
+        lines[NR % 4, 2] = $2;
+        # When we have a complete read (at the sequence quality line)
+        if (NR % 4 == 0) {
+            # Check if both sequence lines (line 2, which is index 2) contain only ACGT
+            if (lines[2, 1] ~ /^[ACGT]+$/ && lines[2, 2] ~ /^[ACGT]+$/) {
+                # If valid, print all 4 lines for the pair
+                print lines[1, 1]"\n"lines[2, 1]"\n"lines[3, 1]"\n"lines[0, 1];
+                print lines[1, 2]"\n"lines[2, 2]"\n"lines[3, 2]"\n"lines[0, 2];
+            }
+        }
+    }' | \
+    awk 'NR % 4 != 0 {printf "%s\t", $0} NR % 4 == 0 {print $0}' | \
+    tee >(cut -f1 | gzip > "$FINAL_OUTPUT_R1") >(cut -f2 | gzip > "$FINAL_OUTPUT_R2") > /dev/null
 
     ((CURRENT_SAMPLE++))
 done < "$SRR_LIST_FILE"
+
+# Clean up the temporary directory
+rm -r "$TEMP_DIR"
 
 echo "Trimming complete! All cleaned files are in the '$TRIMMED_DIR' directory."
