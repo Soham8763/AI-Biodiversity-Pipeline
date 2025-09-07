@@ -1,0 +1,145 @@
+Loading required package: Rcpp
+Processing marker with FWD primer: GTACACACCGCCCGTC 
+Warning message:
+In readLines(srr_list_file) :
+  incomplete final line found on 'srr_list_18s_A.txt'
+Found 43 samples to process from: srr_list_18s_A.txt 
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406391_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406391_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406388_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406388_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406396_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406396_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406399_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406399_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406401_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406401_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406397_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406397_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406407_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406407_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406409_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406409_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406400_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406400_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406416_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406416_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406406_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406406_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406418_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406418_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406408_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406408_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406425_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406425_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406415_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406415_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406427_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406427_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406417_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406417_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406424_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406424_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406434_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406434_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406426_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406426_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406436_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406436_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406433_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406433_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406442_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406442_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406444_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406444_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406435_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406435_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406449_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406449_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406441_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406441_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406443_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406443_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406452_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406452_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406445_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406445_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406458_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406458_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406451_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406451_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406464_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406464_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406466_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406466_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406468_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406468_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406455_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406455_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406459_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406459_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_A/filtered_reads/SRR26406465_1.fastq.gz and ../03_dada2_output_18s_A/filtered_reads/SRR26406465_2.fastq.gz not written.
+Some input samples had no reads pass the filter.
+Filtering summary:
+                       reads.in reads.out
+SRR26406384_1.fastq.gz   535745      1152
+SRR26406385_1.fastq.gz   636525       311
+SRR26406386_1.fastq.gz   441233       907
+SRR26406387_1.fastq.gz   616813       518
+SRR26406388_1.fastq.gz   230867         0
+SRR26406391_1.fastq.gz    14054         0
+SRR26406396_1.fastq.gz    24162         0
+SRR26406397_1.fastq.gz   171942         0
+SRR26406399_1.fastq.gz     8722         0
+SRR26406400_1.fastq.gz   368116         0
+SRR26406401_1.fastq.gz      123         0
+SRR26406406_1.fastq.gz   310470         0
+SRR26406407_1.fastq.gz   423437         0
+SRR26406408_1.fastq.gz   274569         0
+SRR26406409_1.fastq.gz      754         0
+SRR26406415_1.fastq.gz   333984         0
+SRR26406416_1.fastq.gz   247952         0
+SRR26406417_1.fastq.gz   319581         0
+SRR26406418_1.fastq.gz   279728         0
+SRR26406424_1.fastq.gz      740         0
+SRR26406425_1.fastq.gz   341159         0
+SRR26406426_1.fastq.gz   318178         0
+SRR26406427_1.fastq.gz   279470         0
+SRR26406433_1.fastq.gz   352069         0
+SRR26406434_1.fastq.gz   401862         0
+SRR26406435_1.fastq.gz   366688         0
+SRR26406436_1.fastq.gz   319803         0
+SRR26406441_1.fastq.gz   280954         0
+SRR26406442_1.fastq.gz   295516         0
+SRR26406443_1.fastq.gz   105476         0
+SRR26406444_1.fastq.gz   138908         0
+SRR26406445_1.fastq.gz      618         0
+SRR26406449_1.fastq.gz   293396         0
+SRR26406451_1.fastq.gz   307705         0
+SRR26406452_1.fastq.gz   247257         0
+SRR26406455_1.fastq.gz   269118         0
+SRR26406458_1.fastq.gz      472         0
+SRR26406459_1.fastq.gz   336954         0
+SRR26406464_1.fastq.gz   325059         0
+SRR26406465_1.fastq.gz   310542         0
+SRR26406466_1.fastq.gz    35965         0
+SRR26406467_1.fastq.gz   495029       388
+SRR26406468_1.fastq.gz    67082         0
+Learning error rates...
+864864 total bases in 3276 reads from 5 samples will be used for learning the error rates.
+Learning error rates...
+740376 total bases in 3276 reads from 5 samples will be used for learning the error rates.
+Dereplicating sequences...
+Dereplicating sequence entries in Fastq file: ../03_dada2_output_18s_A/filtered_reads/SRR26406384_1.fastq.gz
+Encountered 501 unique sequences from 1152 total sequences read.
+Dereplicating sequence entries in Fastq file: ../03_dada2_output_18s_A/filtered_reads/SRR26406385_1.fastq.gz
+Encountered 241 unique sequences from 311 total sequences read.
+Dereplicating sequence entries in Fastq file: ../03_dada2_output_18s_A/filtered_reads/SRR26406386_1.fastq.gz
+Encountered 232 unique sequences from 907 total sequences read.
+Dereplicating sequence entries in Fastq file: ../03_dada2_output_18s_A/filtered_reads/SRR26406387_1.fastq.gz
+Encountered 319 unique sequences from 518 total sequences read.
+Dereplicating sequence entries in Fastq file: ../03_dada2_output_18s_A/filtered_reads/SRR26406467_1.fastq.gz
+Encountered 228 unique sequences from 388 total sequences read.
+Dereplicating sequences...
+Dereplicating sequence entries in Fastq file: ../03_dada2_output_18s_A/filtered_reads/SRR26406384_2.fastq.gz
+Encountered 678 unique sequences from 1152 total sequences read.
+Dereplicating sequence entries in Fastq file: ../03_dada2_output_18s_A/filtered_reads/SRR26406385_2.fastq.gz
+Encountered 261 unique sequences from 311 total sequences read.
+Dereplicating sequence entries in Fastq file: ../03_dada2_output_18s_A/filtered_reads/SRR26406386_2.fastq.gz
+Encountered 368 unique sequences from 907 total sequences read.
+Dereplicating sequence entries in Fastq file: ../03_dada2_output_18s_A/filtered_reads/SRR26406387_2.fastq.gz
+Encountered 374 unique sequences from 518 total sequences read.
+Dereplicating sequence entries in Fastq file: ../03_dada2_output_18s_A/filtered_reads/SRR26406467_2.fastq.gz
+Encountered 272 unique sequences from 388 total sequences read.
+Running DADA to infer ASVs...
+Sample 1 - 1152 reads in 501 unique sequences.
+Sample 2 - 311 reads in 241 unique sequences.
+Sample 3 - 907 reads in 232 unique sequences.
+Sample 4 - 518 reads in 319 unique sequences.
+Sample 5 - 388 reads in 228 unique sequences.
+Running DADA to infer ASVs...
+Sample 1 - 1152 reads in 678 unique sequences.
+Sample 2 - 311 reads in 261 unique sequences.
+Sample 3 - 907 reads in 368 unique sequences.
+Sample 4 - 518 reads in 374 unique sequences.
+Sample 5 - 388 reads in 272 unique sequences.
+Merging paired reads...
+621 paired-reads (in 62 unique pairings) successfully merged out of 757 (in 83 pairings) input.
+Duplicate sequences in merged output.
+98 paired-reads (in 21 unique pairings) successfully merged out of 108 (in 23 pairings) input.
+472 paired-reads (in 19 unique pairings) successfully merged out of 776 (in 30 pairings) input.
+Duplicate sequences in merged output.
+211 paired-reads (in 30 unique pairings) successfully merged out of 242 (in 36 pairings) input.
+175 paired-reads (in 20 unique pairings) successfully merged out of 184 (in 22 pairings) input.
+Duplicate sequences in merged output.
+Constructing sequence table...
+Duplicate sequences detected and merged.
+Duplicate sequences detected and merged.
+Duplicate sequences detected and merged.
+Removing chimeras...
+Identified 2 bimeras out of 143 input sequences.
+Dimensions of final ASV table: 5 141 
+DADA2 pipeline complete! 👍 Output files are in: ../03_dada2_output_18s_A 
