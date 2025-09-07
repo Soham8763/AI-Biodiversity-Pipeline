@@ -17,8 +17,8 @@ SRR_LIST_18SA="srr_list_18s_A.txt"
 TRIM_DIR_18SA="02_trimmed_reads_18s_A"
 DADA2_DIR_18SA="03_dada2_output_18s_A"
 # From your file:
-FWD_PRIMER_18SA="GTCGGTTAAAACTCGTGCCAGC"
-REV_PRIMER_18SA="CATAGTGGGGTATCTAATCCCAGTTTG"
+FWD_PRIMER_18SA="GTACACACCGCCCGTC"
+REV_PRIMER_18SA="TGATCCTTCTGCAGGTTCACCTAC"
 
 # --- Group 2: 18S Primer Set B Configuration ---
 MARKER_18SB_NAME="18S_B"
@@ -26,8 +26,8 @@ SRR_LIST_18SB="srr_list_18s_B.txt"
 TRIM_DIR_18SB="02_trimmed_reads_18s_B"
 DADA2_DIR_18SB="03_dada2_output_18s_B"
 # From your file:
-FWD_PRIMER_18SB="CCAGCASCYGCGGTAATTCC"
-REV_PRIMER_18SB="ACTTTCGTTCTTGATYRA"
+FWD_PRIMER_18SB="GGWACWGGWTGAACWGTWTAYCCYCC"
+REV_PRIMER_18SB="TAAACTTCAGGGTGACCAAAAAATCA"
 
 
 # --- Marker 2: COI Configuration ---
@@ -60,7 +60,11 @@ cat srr_list_18s_A.txt srr_list_18s_B.txt srr_list_coi.txt > srr_list_all.txt
 echo "Download script finished."
 echo ""
 
-# --- Run Pipeline for 18S Primer Set A ---
+echo "--- STEP 2 & 3: LAUNCHING PARALLEL PROCESSING FOR ALL MARKER GROUPS ---"
+
+
+# --- Launch Pipeline for 18S Primer Set A in the background ---
+(
 echo "--- STARTING PIPELINE FOR $MARKER_18SA_NAME ---"
 echo "Step 2.1: Trimming $MARKER_18SA_NAME..."
 $TRIM_SCRIPT "$SRR_LIST_18SA" "$TRIM_DIR_18SA" "$FWD_PRIMER_18SA" "$REV_PRIMER_18SA" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_02_trimming_${MARKER_18SA_NAME}.log"
@@ -70,8 +74,10 @@ echo "Step 3.1: Running DADA2 for $MARKER_18SA_NAME..."
 Rscript "$DADA2_SCRIPT" "$TRIM_DIR_18SA" "$DADA2_DIR_18SA" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_03_dada2_${MARKER_18SA_NAME}.log"
 echo "DADA2 for $MARKER_18SA_NAME finished."
 echo ""
+) &
 
-# --- Run Pipeline for 18S Primer Set B ---
+# --- Launch Pipeline for 18S Primer Set B in the background ---
+(
 echo "--- STARTING PIPELINE FOR $MARKER_18SB_NAME ---"
 echo "Step 2.1: Trimming $MARKER_18SB_NAME..."
 $TRIM_SCRIPT "$SRR_LIST_18SB" "$TRIM_DIR_18SB" "$FWD_PRIMER_18SB" "$REV_PRIMER_18SB" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_02_trimming_${MARKER_18SB_NAME}.log"
@@ -81,8 +87,10 @@ echo "Step 3.1: Running DADA2 for $MARKER_18SB_NAME..."
 Rscript "$DADA2_SCRIPT" "$TRIM_DIR_18SB" "$DADA2_DIR_18SB" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_03_dada2_${MARKER_18SB_NAME}.log"
 echo "DADA2 for $MARKER_18SB_NAME finished."
 echo ""
+) &
 
-# --- Run Pipeline for COI ---
+# --- Launch Pipeline for COI in the background ---
+(
 echo "--- STARTING PIPELINE FOR $MARKER_COI_NAME ---"
 echo "Step 2.2: Trimming $MARKER_COI_NAME..."
 $TRIM_SCRIPT "$SRR_LIST_COI" "$TRIM_DIR_COI" "$FWD_PRIMER_COI" "$REV_PRIMER_COI" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_02_trimming_${MARKER_COI_NAME}.log"
@@ -91,6 +99,12 @@ echo "Trimming for $MARKER_COI_NAME finished."
 echo "Step 3.2: Running DADA2 for $MARKER_COI_NAME..."
 Rscript "$DADA2_SCRIPT" "$TRIM_DIR_COI" "$DADA2_DIR_COI" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_03_dada2_${MARKER_COI_NAME}.log"
 echo "DADA2 for $MARKER_COI_NAME finished."
+echo ""
+)&
+
+# --- Wait for all background jobs to complete ---
+echo "All jobs launched. Waiting for completion..."
+wait
 echo ""
 
 echo "--- ✅ FULL PIPELINE COMPLETE FOR ALL MARKERS ---"
