@@ -5,7 +5,7 @@ set -e
 
 # --- Configuration ---
 # The name of the file containing the list of SRR accessions
-SRR_LIST_FILE="srr_list.txt"
+SRR_LIST_FILE="$1"
 
 # The directory where raw data will be saved
 OUTPUT_DIR="01_raw_data"
