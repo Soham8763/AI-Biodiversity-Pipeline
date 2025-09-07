@@ -1,23 +1,45 @@
 #!/bin/bash
-
-# This is a simple controller script to run the bioinformatics pipeline steps in order.
-# It assumes you will activate the conda environment manually before running it.
-
-# Exit immediately if any command fails.
 set -e
 
-# --- Configuration ---
-# The names of your existing scripts
+# This is the master controller script.
+# Define all marker-specific parameters here.
+
+# --- Global Configuration ---
 DOWNLOAD_SCRIPT="get_raw_data.sh"
-TRIM_SCRIPT="trim_sequences.sh"
+TRIM_SCRIPT="./trim_sequences.sh"  # Note the ./
 DADA2_SCRIPT="run_dada2.R"
-BIO_ENV="deepsea-pipeline"
 LOG_DIR="logs"
-
-# --- Script Execution ---
-
 TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
 
+# --- Group 1: 18S Primer Set A Configuration ---
+MARKER_18SA_NAME="18S_A"
+SRR_LIST_18SA="srr_list_18s_A.txt"
+TRIM_DIR_18SA="02_trimmed_reads_18s_A"
+DADA2_DIR_18SA="03_dada2_output_18s_A"
+# From your file:
+FWD_PRIMER_18SA="GTCGGTTAAAACTCGTGCCAGC"
+REV_PRIMER_18SA="CATAGTGGGGTATCTAATCCCAGTTTG"
+
+# --- Group 2: 18S Primer Set B Configuration ---
+MARKER_18SB_NAME="18S_B"
+SRR_LIST_18SB="srr_list_18s_B.txt"
+TRIM_DIR_18SB="02_trimmed_reads_18s_B"
+DADA2_DIR_18SB="03_dada2_output_18s_B"
+# From your file:
+FWD_PRIMER_18SB="CCAGCASCYGCGGTAATTCC"
+REV_PRIMER_18SB="ACTTTCGTTCTTGATYRA"
+
+
+# --- Marker 2: COI Configuration ---
+MARKER_COI_NAME="COI"
+SRR_LIST_COI="srr_list_coi.txt"
+TRIM_DIR_COI="02_trimmed_reads_coi"
+DADA2_DIR_COI="03_dada2_output_coi"
+# IMPORTANT: Replace with your actual COI primers (e.g., Leray primers)
+FWD_PRIMER_COI="GGWACWGGWTGAACWGTWTAYCCYCC"
+REV_PRIMER_COI="TAAACTTCAGGGTGACCAAAAAATCA"
+
+# --- Pipeline Execution ---
 mkdir -p "$LOG_DIR"
 
 echo "--- Activating Conda Environment: $BIO_ENV ---"
@@ -33,19 +55,46 @@ echo "Permissions set."
 echo ""
 
 echo "--- STEP 1: RUNNING DOWNLOAD SCRIPT ---"
-./"$DOWNLOAD_SCRIPT" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_01_download.log"
+cat srr_list_18s_A.txt srr_list_18s_B.txt srr_list_coi.txt > srr_list_all.txt
+./"$DOWNLOAD_SCRIPT" srr_list_all.txt 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_01_download.log"
 echo "Download script finished."
 echo ""
 
-echo "--- STEP 2: RUNNING TRIMMING SCRIPT ---"
-./"$TRIM_SCRIPT" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_02_trimming.log"
-echo "Trimming script finished."
+# --- Run Pipeline for 18S Primer Set A ---
+echo "--- STARTING PIPELINE FOR $MARKER_18SA_NAME ---"
+echo "Step 2.1: Trimming $MARKER_18SA_NAME..."
+$TRIM_SCRIPT "$SRR_LIST_18SA" "$TRIM_DIR_18SA" "$FWD_PRIMER_18SA" "$REV_PRIMER_18SA" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_02_trimming_${MARKER_18SA_NAME}.log"
+echo "Trimming for $MARKER_18SA_NAME finished."
+
+echo "Step 3.1: Running DADA2 for $MARKER_18SA_NAME..."
+Rscript "$DADA2_SCRIPT" "$TRIM_DIR_18SA" "$DADA2_DIR_18SA" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_03_dada2_${MARKER_18SA_NAME}.log"
+echo "DADA2 for $MARKER_18SA_NAME finished."
 echo ""
 
-echo "--- STEP 3: RUNNING DADA2 SCRIPT ---"
-Rscript "$DADA2_SCRIPT" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_03_dada2.log"
-echo "DADA2 script finished."
+# --- Run Pipeline for 18S Primer Set B ---
+echo "--- STARTING PIPELINE FOR $MARKER_18SB_NAME ---"
+echo "Step 2.1: Trimming $MARKER_18SB_NAME..."
+$TRIM_SCRIPT "$SRR_LIST_18SB" "$TRIM_DIR_18SB" "$FWD_PRIMER_18SB" "$REV_PRIMER_18SB" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_02_trimming_${MARKER_18SB_NAME}.log"
+echo "Trimming for $MARKER_18SB_NAME finished."
+
+echo "Step 3.1: Running DADA2 for $MARKER_18SB_NAME..."
+Rscript "$DADA2_SCRIPT" "$TRIM_DIR_18SB" "$DADA2_DIR_18SB" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_03_dada2_${MARKER_18SB_NAME}.log"
+echo "DADA2 for $MARKER_18SB_NAME finished."
 echo ""
 
-echo "--- FULL PIPELINE COMPLETE ---"
+# --- Run Pipeline for COI ---
+echo "--- STARTING PIPELINE FOR $MARKER_COI_NAME ---"
+echo "Step 2.2: Trimming $MARKER_COI_NAME..."
+$TRIM_SCRIPT "$SRR_LIST_COI" "$TRIM_DIR_COI" "$FWD_PRIMER_COI" "$REV_PRIMER_COI" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_02_trimming_${MARKER_COI_NAME}.log"
+echo "Trimming for $MARKER_COI_NAME finished."
+
+echo "Step 3.2: Running DADA2 for $MARKER_COI_NAME..."
+Rscript "$DADA2_SCRIPT" "$TRIM_DIR_COI" "$DADA2_DIR_COI" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_03_dada2_${MARKER_COI_NAME}.log"
+echo "DADA2 for $MARKER_COI_NAME finished."
+echo ""
+
+echo "--- ✅ FULL PIPELINE COMPLETE FOR ALL MARKERS ---"
 echo "All logs for this run (ID: ${TIMESTAMP}) have been saved in the '$LOG_DIR' directory."
+
+# Clean up the combined list
+rm srr_list_all.txt
