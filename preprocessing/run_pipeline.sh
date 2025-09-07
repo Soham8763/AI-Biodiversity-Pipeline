@@ -9,7 +9,9 @@ DOWNLOAD_SCRIPT="get_raw_data.sh"
 TRIM_SCRIPT="./trim_sequences.sh"  # Note the ./
 DADA2_SCRIPT="run_dada2.R"
 LOG_DIR="logs"
+BIO_ENV="deepsea-pipeline"
 TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
+N_THREADS_PER_JOB=1
 
 # --- Group 1: 18S Primer Set A Configuration ---
 MARKER_18SA_NAME="18S_A"
@@ -71,7 +73,7 @@ $TRIM_SCRIPT "$SRR_LIST_18SA" "$TRIM_DIR_18SA" "$FWD_PRIMER_18SA" "$REV_PRIMER_1
 echo "Trimming for $MARKER_18SA_NAME finished."
 
 echo "Step 3.1: Running DADA2 for $MARKER_18SA_NAME..."
-Rscript "$DADA2_SCRIPT" "$TRIM_DIR_18SA" "$DADA2_DIR_18SA" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_03_dada2_${MARKER_18SA_NAME}.log"
+Rscript "$DADA2_SCRIPT" "$TRIM_DIR_18SA" "$DADA2_DIR_18SA" "$N_THREADS_PER_JOB" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_03_dada2_${MARKER_18SA_NAME}.log"
 echo "DADA2 for $MARKER_18SA_NAME finished."
 echo ""
 ) &
@@ -79,12 +81,12 @@ echo ""
 # --- Launch Pipeline for 18S Primer Set B in the background ---
 (
 echo "--- STARTING PIPELINE FOR $MARKER_18SB_NAME ---"
-echo "Step 2.1: Trimming $MARKER_18SB_NAME..."
+echo "Step 2.2: Trimming $MARKER_18SB_NAME..."
 $TRIM_SCRIPT "$SRR_LIST_18SB" "$TRIM_DIR_18SB" "$FWD_PRIMER_18SB" "$REV_PRIMER_18SB" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_02_trimming_${MARKER_18SB_NAME}.log"
 echo "Trimming for $MARKER_18SB_NAME finished."
 
-echo "Step 3.1: Running DADA2 for $MARKER_18SB_NAME..."
-Rscript "$DADA2_SCRIPT" "$TRIM_DIR_18SB" "$DADA2_DIR_18SB" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_03_dada2_${MARKER_18SB_NAME}.log"
+echo "Step 3.2: Running DADA2 for $MARKER_18SB_NAME..."
+Rscript "$DADA2_SCRIPT" "$TRIM_DIR_18SB" "$DADA2_DIR_18SB" "$N_THREADS_PER_JOB" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_03_dada2_${MARKER_18SB_NAME}.log"
 echo "DADA2 for $MARKER_18SB_NAME finished."
 echo ""
 ) &
@@ -92,15 +94,15 @@ echo ""
 # --- Launch Pipeline for COI in the background ---
 (
 echo "--- STARTING PIPELINE FOR $MARKER_COI_NAME ---"
-echo "Step 2.2: Trimming $MARKER_COI_NAME..."
+echo "Step 2.3: Trimming $MARKER_COI_NAME..."
 $TRIM_SCRIPT "$SRR_LIST_COI" "$TRIM_DIR_COI" "$FWD_PRIMER_COI" "$REV_PRIMER_COI" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_02_trimming_${MARKER_COI_NAME}.log"
 echo "Trimming for $MARKER_COI_NAME finished."
 
-echo "Step 3.2: Running DADA2 for $MARKER_COI_NAME..."
-Rscript "$DADA2_SCRIPT" "$TRIM_DIR_COI" "$DADA2_DIR_COI" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_03_dada2_${MARKER_COI_NAME}.log"
+echo "Step 3.3: Running DADA2 for $MARKER_COI_NAME..."
+Rscript "$DADA2_SCRIPT" "$TRIM_DIR_COI" "$DADA2_DIR_COI" "$N_THREADS_PER_JOB" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_03_dada2_${MARKER_COI_NAME}.log"
 echo "DADA2 for $MARKER_COI_NAME finished."
 echo ""
-)&
+) &
 
 # --- Wait for all background jobs to complete ---
 echo "All jobs launched. Waiting for completion..."
