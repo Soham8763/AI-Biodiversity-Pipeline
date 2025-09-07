@@ -11,7 +11,7 @@ DADA2_SCRIPT="run_dada2.R"
 LOG_DIR="logs"
 BIO_ENV="deepsea-pipeline"
 TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
-N_THREADS_PER_JOB=1
+N_THREADS_PER_JOB=4 # as i can give 12 logical cores so dividing among the 3
 
 # --- Group 1: 18S Primer Set A Configuration ---
 MARKER_18SA_NAME="18S_A"
