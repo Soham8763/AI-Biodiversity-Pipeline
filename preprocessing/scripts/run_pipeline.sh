@@ -53,57 +53,60 @@ chmod +x "$DOWNLOAD_SCRIPT"
 echo "Permissions set."
 echo ""
 
-echo "--- STEP 1: RUNNING DOWNLOAD SCRIPT ---"
-cat srr_list_18s_A.txt srr_list_18s_B.txt srr_list_coi.txt > srr_list_all.txt
-./"$DOWNLOAD_SCRIPT" srr_list_all.txt 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_01_download.log"
-echo "Download script finished."
-echo ""
+# echo "--- STEP 1: RUNNING DOWNLOAD SCRIPT ---"
+# cat srr_list_18s_A.txt srr_list_18s_B.txt srr_list_coi.txt > srr_list_all.txt
+# ./"$DOWNLOAD_SCRIPT" srr_list_all.txt 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_01_download.log"
+# echo "Download script finished."
+# echo ""
 
-# Launch Pipeline for 18S Primer Set A
-(
-  echo "--- STARTING: $MARKER_18SA_NAME ---"
-  Rscript "$DADA2_FINAL_SCRIPT" \
-    "$RAW_DATA_DIR" \
-    "$DADA2_DIR_18SA" \
-    "$FWD_PRIMER_18SA" \
-    "$REV_PRIMER_18SA" \
-    "$N_THREADS_PER_JOB" \
-    "$SRR_LIST_18SA" \
-    "$TRUNCLEN_F_18SA" \
-    "$TRUNCLEN_R_18SA" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_dada2_${MARKER_18SA_NAME}.log"
-  echo "--- FINISHED: $MARKER_18SA_NAME ---"
-) &
+# # Launch Pipeline for 18S Primer Set A
+# (
+#   echo "--- STARTING: $MARKER_18SA_NAME ---"
+#   Rscript "$DADA2_FINAL_SCRIPT" \
+#     "$RAW_DATA_DIR" \
+#     "$DADA2_DIR_18SA" \
+#     "$FWD_PRIMER_18SA" \
+#     "$REV_PRIMER_18SA" \
+#     "$N_THREADS_PER_JOB" \
+#     "$SRR_LIST_18SA" \
+#     "$TRUNCLEN_F_18SA" \
+#     "$TRUNCLEN_R_18SA" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_dada2_${MARKER_18SA_NAME}.log"
+#   echo "--- FINISHED: $MARKER_18SA_NAME ---"
+# ) &
 
-# Launch Pipeline for 18S Primer Set B
-(
-  echo "--- STARTING: $MARKER_18SB_NAME ---"
-  Rscript "$DADA2_FINAL_SCRIPT" \
-    "$RAW_DATA_DIR" \
-    "$DADA2_DIR_18SB" \
-    "$FWD_PRIMER_18SB" \
-    "$REV_PRIMER_18SB" \
-    "$N_THREADS_PER_JOB" \
-    "$SRR_LIST_18SB" \
-    "$TRUNCLEN_F_18SB" \
-    "$TRUNCLEN_R_18SB" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_dada2_${MARKER_18SB_NAME}.log"
-  echo "--- FINISHED: $MARKER_18SB_NAME ---"
-) &
+# # Launch Pipeline for 18S Primer Set B
+# (
+#   echo "--- STARTING: $MARKER_18SB_NAME ---"
+#   Rscript "$DADA2_FINAL_SCRIPT" \
+#     "$RAW_DATA_DIR" \
+#     "$DADA2_DIR_18SB" \
+#     "$FWD_PRIMER_18SB" \
+#     "$REV_PRIMER_18SB" \
+#     "$N_THREADS_PER_JOB" \
+#     "$SRR_LIST_18SB" \
+#     "$TRUNCLEN_F_18SB" \
+#     "$TRUNCLEN_R_18SB" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_dada2_${MARKER_18SB_NAME}.log"
+#   echo "--- FINISHED: $MARKER_18SB_NAME ---"
+# ) &
 
-# Launch Pipeline for COI
-(
-  echo "--- STARTING: $MARKER_COI_NAME ---"
-  Rscript "$DADA2_FINAL_SCRIPT" \
-    "$RAW_DATA_DIR" \
-    "$DADA2_DIR_COI" \
-    "$FWD_PRIMER_COI" \
-    "$REV_PRIMER_COI" \
-    "$N_THREADS_PER_JOB" \
-    "$SRR_LIST_COI" \
-    "$TRUNCLEN_F_COI" \
-    "$TRUNCLEN_R_COI" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_dada2_${MARKER_COI_NAME}.log"
-  echo "--- FINISHED: $MARKER_COI_NAME ---"
-) &
+# # Launch Pipeline for COI
+# (
+#   echo "--- STARTING: $MARKER_COI_NAME ---"
+#   Rscript "$DADA2_FINAL_SCRIPT" \
+#     "$RAW_DATA_DIR" \
+#     "$DADA2_DIR_COI" \
+#     "$FWD_PRIMER_COI" \
+#     "$REV_PRIMER_COI" \
+#     "$N_THREADS_PER_JOB" \
+#     "$SRR_LIST_COI" \
+#     "$TRUNCLEN_F_COI" \
+#     "$TRUNCLEN_R_COI" 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_dada2_${MARKER_COI_NAME}.log"
+#   echo "--- FINISHED: $MARKER_COI_NAME ---"
+# ) &
 
-echo "All jobs launched in parallel. Waiting for completion..."
-wait
+# echo "All jobs launched in parallel. Waiting for completion..."
+# wait
+
+Rscript run_full_analysis.R 2>&1 | tee "${LOG_DIR}/${TIMESTAMP}_dada2_full_analysis.log"
+
 echo "--- ✅ FULL PIPELINE COMPLETE FOR ALL MARKERS ---"
