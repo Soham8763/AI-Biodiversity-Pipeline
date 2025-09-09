@@ -1,7 +1,3 @@
-Here is the full, structured technical documentation for executing the AI-driven eDNA analysis pipeline.
-
-* * * * *
-
 **Technical Documentation: AI-Enhanced eDNA Biodiversity Pipeline**
 -------------------------------------------------------------------
 
