@@ -1,0 +1,17 @@
+Loading required package: Rcpp
+Processing marker with FWD primer: GTACACACCGCCCGTC 
+Warning message:
+In readLines(srr_list_file) :
+  incomplete final line found on 'srr_list_18s_B.txt'
+Found 2 samples to process from: srr_list_18s_B.txt 
+The filter removed all reads: ../03_dada2_output_18s_B/filtered_reads/SRR26406453_1.fastq.gz and ../03_dada2_output_18s_B/filtered_reads/SRR26406453_2.fastq.gz not written.
+The filter removed all reads: ../03_dada2_output_18s_B/filtered_reads/SRR26406454_1.fastq.gz and ../03_dada2_output_18s_B/filtered_reads/SRR26406454_2.fastq.gz not written.
+Warning message:
+In filterAndTrim(fnFs, filtFs, fnRs, filtRs, trimLeft = c(nchar(FWD_PRIMER),  :
+  No reads passed the filter. Please revisit your filtering parameters.
+Filtering summary:
+                       reads.in reads.out
+SRR26406453_1.fastq.gz   274269         0
+SRR26406454_1.fastq.gz   330522         0
+Error: No reads survived filtering. Check your truncLen/maxEE parameters and primer sequences.
+Execution halted
