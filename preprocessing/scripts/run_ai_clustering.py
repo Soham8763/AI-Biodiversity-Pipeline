@@ -60,8 +60,12 @@ def fcgr(sequence, k):
     for base in sequence.upper():
         if base not in CGR_COORDS: continue
         last_coord = (last_coord + CGR_COORDS[base]) / 2.0
-        x_idx = int(last_coord[0] * img_size)
-        y_idx = int(last_coord[1] * img_size)
+
+
+        x_idx = min(int(last_coord[0] * img_size), img_size - 1)
+        y_idx = min(int(last_coord[1] * img_size), img_size - 1)
+
+
         fcgr_array[x_idx, y_idx] += 1
     return fcgr_array
 
@@ -159,10 +163,21 @@ del dataloader, tensor_data; gc.collect(); torch.cuda.empty_cache()
 
 # --- 3. EXTRACT LATENT VECTORS AND CLUSTER ---
 print("\n--- Step 3: Extracting Latent Vectors and Clustering ---")
-model.eval()
+inference_dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=False)
+latent_vectors_list = []
+model.eval() # Set model to evaluation mode
 with torch.no_grad():
-    all_images_tensor = torch.from_numpy(fcgr_images).float().to(device)
-    latent_vectors = model.encode(all_images_tensor).cpu().numpy()
+    for data in inference_dataloader:
+        img, _ = data
+        img = img.to(device)
+        # Get the latent vectors for the current batch
+        batch_vectors = model.encode(img)
+        # Move them back to the CPU and append to our list
+        latent_vectors_list.append(batch_vectors.cpu().numpy())
+
+# Combine the batches of vectors into a single large array
+latent_vectors = np.concatenate(latent_vectors_list, axis=0)
+
 print(f"Generated {latent_vectors.shape[0]} latent vectors of dimension {latent_vectors.shape[1]}.")
 
 # Perform clustering
