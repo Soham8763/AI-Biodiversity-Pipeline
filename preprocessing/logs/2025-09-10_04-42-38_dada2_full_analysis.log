@@ -1,0 +1,28 @@
+Loading required package: Rcpp
+[2025-09-10 04:42:49] [INFO] Starting DADA2 downstream analysis pipeline...
+[2025-09-10 04:42:49] [INFO] =====================================================
+[2025-09-10 04:42:49] [INFO] Starting analysis for marker: 18S_A
+[2025-09-10 04:42:49] [INFO] =====================================================
+[2025-09-10 04:42:49] [INFO] SUCCESS: Final phyloseq object already exists. Skipping analysis for this marker.
+[2025-09-10 04:42:49] [INFO]    - Found at:../04_analysis_output/18S_A/18S_A_phyloseq.rds
+[2025-09-10 04:42:50] [INFO] =====================================================
+[2025-09-10 04:42:50] [INFO] Starting analysis for marker: COI
+[2025-09-10 04:42:50] [INFO] =====================================================
+[2025-09-10 04:42:50] [INFO] Created checkpoint directory at: ../04_analysis_output/COI/checkpoints
+[2025-09-10 04:42:50] [INFO] Step 1: Loading and preparing data...
+[2025-09-10 04:42:51] [INFO] Current memory usage: 583.4 MB
+[2025-09-10 04:42:51] [INFO]    - Reading ASV table: ../03_dada2_output_coi/seqtab.tsv
+[2025-09-10 04:42:51] [INFO]    - ASV table loaded:17255ASVs across40samples.
+[2025-09-10 04:42:51] [INFO]    - Reading metadata: ../databases/USGS_eDNA_Deepsearch_metadata.csv
+[2025-09-10 04:42:51] [INFO]    - Metadata loaded for85samples.
+[2025-09-10 04:42:51] [INFO]    - Filtering and aligning samples between ASV table and metadata...
+[2025-09-10 04:42:51] [INFO]    - Data filtering complete. Retained17255ASVs across40samples.
+[2025-09-10 04:42:52] [INFO] Current memory usage: 592.5 MB
+[2025-09-10 04:42:52] [INFO] Step 2: Assigning taxonomy with checkpoint system...
+[2025-09-10 04:42:52] [INFO]    - To be processed:17255sequences in9chunks.
+[2025-09-10 04:42:52] [INFO] ----------------------------------------------------
+[2025-09-10 04:42:52] [INFO] Checking for chunk 1 of 9...
+[2025-09-10 04:42:52] [INFO]    - PROCESSING: No checkpoint found. Starting new computation.
+[2025-09-10 04:42:52] [INFO]    - Contains2000sequences.
+[2025-09-10 04:42:53] [INFO] Current memory usage: 592.6 MB
+[2025-09-10 04:42:53] [INFO]    - Calling assignTaxonomy()... (This is the slow step, system may appear frozen)
