@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/edna_biodiversity_dev
+  jpa:
+    show-sql: true
+  flyway:
+    clean-on-validation-error: true
+
+logging:
+  level:
+    com.edna.biodiversity: DEBUG
+    org.springframework: DEBUG
+    org.hibernate: DEBUG
+
+springdoc:
+  swagger-ui:
+    enabled: true

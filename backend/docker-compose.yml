@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=edna_biodiversity
+      - DB_USERNAME=edna_user
+      - DB_PASSWORD=edna_password
+    depends_on:
+      - db
+
+  db:
+    image: postgres:14-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=edna_biodiversity
+      - POSTGRES_USER=edna_user
+      - POSTGRES_PASSWORD=edna_password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
