@@ -9,10 +9,6 @@
 # ================================================================= #
 
 # --- 0. SETUP ---
-# Ensure necessary packages are installed. Run in R console if needed:
-# if (!require("BiocManager", quietly = TRUE)) install.packages("BiocManager")
-# BiocManager::install("DESeq2")
-# install.packages(c("phyloseq", "ggplot2", "vegan", "indicspecies", "pheatmap"))
 
 # Load required libraries
 library(phyloseq)
@@ -99,7 +95,6 @@ cat("--- Generating heatmap of the 25 most abundant ASVs... ---\n")
 top25_asvs <- names(sort(taxa_sums(ps_filt), decreasing = TRUE)[1:25])
 ps_top25 <- prune_taxa(top25_asvs, ps_filt)
 
-# --- !!! CORRECTION IS HERE !!! ---
 # Use log-transformed counts for robust clustering
 log_transformed_counts <- log10(otu_table(ps_top25) + 1)
 
@@ -110,7 +105,6 @@ heatmap_labels <- paste(
   ifelse(is.na(tax_labels_df$Genus), "Unknown", tax_labels_df$Genus),
   sep = "_"
 )
-# --- !!! END OF CORRECTION !!! ---
 
 heatmap_path <- file.path(output_dir, "4_top25_asv_heatmap.pdf")
 pheatmap(log_transformed_counts,

@@ -2,7 +2,7 @@
 set -e
 
 # --- Global Configuration ---
-DADA2_FINAL_SCRIPT="run_dada2.R" # Using the new, more powerful R script
+DADA2_FINAL_SCRIPT="run_dada2.R"
 RAW_DATA_DIR="../01_raw_data"
 LOG_DIR="../logs"
 TIMESTAMP=$(date +%Y-%m-%d_%H-%M-%S)
@@ -25,8 +25,8 @@ SRR_LIST_18SB="srr_list_18s_B.txt"
 DADA2_DIR_18SB="../03_dada2_output_18s_B"
 FWD_PRIMER_18SB="GGWACWGGWTGAACWGTWTAYCCYCC" 
 REV_PRIMER_18SB="TAAACTTCAGGGTGACCAAAAAATCA" 
-TRUNCLEN_F_18SB=280 # Run FastQC on these samples
-TRUNCLEN_R_18SB=250 # Run FastQC on these samples
+TRUNCLEN_F_18SB=280 # Set based on FastQC for this marker
+TRUNCLEN_R_18SB=250 # Set based on FastQC for this marker
 
 # --- Group 3: COI Configuration ---
 MARKER_COI_NAME="COI"
@@ -34,12 +34,10 @@ SRR_LIST_COI="srr_list_coi.txt"
 DADA2_DIR_COI="../03_dada2_output_coi"
 FWD_PRIMER_COI="GGWACWGGWTGAACWGTWTAYCCYCC"
 REV_PRIMER_COI="TAAACTTCAGGGTGACCAAAAAATCA"
-TRUNCLEN_F_COI=280 # Run FastQC on these samples
-TRUNCLEN_R_COI=220 # Run FastQC on these samples
+TRUNCLEN_F_COI=280 # Set based on FastQC for this marker
+TRUNCLEN_R_COI=220 # Set based on FastQC for this marker
 
-# --- Pipeline Execution ---
 mkdir -p "$LOG_DIR"
-# (conda activation, permissions, etc. would go here)
 echo "--- LAUNCHING PARALLEL DADA2 WORKFLOWS ---"
 
 echo "--- Activating Conda Environment: $BIO_ENV ---"
