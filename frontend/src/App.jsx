@@ -3,6 +3,7 @@ import Lenis from 'lenis'
 import viteLogo from '/vite.svg'
 import './App.css'
 import Landing from '../pages/Landing'
+import UploadComponent from '../pages/UploadComponent'
 
 function App() {
 
@@ -17,7 +18,7 @@ function App() {
 
   return (
     <>
-      <Landing/>
+      <UploadComponent/>
     </>
   )
 }
