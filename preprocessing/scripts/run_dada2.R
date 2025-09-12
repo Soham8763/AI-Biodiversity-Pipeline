@@ -1,13 +1,13 @@
 #!/usr/bin/env Rscript
 # run_dada2_final.R
 
-# --- 0. Dependencies ---
+# --- 0. Dependencies --
 if (!requireNamespace("dada2", quietly = TRUE)) {
   stop("Package 'dada2' is needed. Please install it.", call. = FALSE)
 }
 library(dada2)
 
-# --- 1. Get Arguments (Now 8 total) ---
+# --- 1. Get Arguments ---
 args <- commandArgs(trailingOnly = TRUE)
 if (length(args) != 8) {
   stop("Usage: Rscript run_dada2_final.R <raw_dir> <out_dir> <fwd_primer> <rev_primer> <threads> <srr_list> <truncF> <truncR>", call. = FALSE)
@@ -63,8 +63,6 @@ if(all(out[, "reads.out"] == 0)) {
 }
 
 # --- 5. DADA2 Main Workflow (Unchanged) ---
-# ... (The rest of the DADA2 workflow: learnErrors, dada, mergePairs, etc.) ...
-# This part of the script remains exactly the same as the previous version.
 
 # Use the new filtered file paths from this point onward.
 filtFs <- sort(list.files(filt_path, pattern = "_1.fastq.gz", full.names = TRUE))
@@ -87,7 +85,7 @@ cat("Constructing sequence table...\n"); seqtab <- makeSequenceTable(mergers)
 cat("Removing chimeras...\n"); seqtab.nochim <- removeBimeraDenovo(seqtab, method = "consensus", multithread = n_threads, verbose = TRUE)
 cat("Dimensions of final ASV table:", dim(seqtab.nochim), "\n")
 
-# --- 6. Save Outputs (Unchanged) ---
+# --- 6. Save Outputs ---
 write.table(t(seqtab.nochim), file.path(output_path, "seqtab.tsv"), sep = "\t", row.names = TRUE, col.names = NA, quote = FALSE)
 uniquesToFasta <- function(uniques, fout) {
   headers <- paste0(">ASV", seq_along(uniques))

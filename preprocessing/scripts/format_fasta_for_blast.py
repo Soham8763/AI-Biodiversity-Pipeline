@@ -40,9 +40,7 @@ with gzip.open(INPUT_FASTA_PATH, "rt") as handle_in, open(OUTPUT_FASTA_PATH, "w"
     for record in SeqIO.parse(handle_in, "fasta"):
         count += 1
         original_id = record.id
-        # Create a new short ID (e.g., "PR2_1")
         record.id = f"{ID_PREFIX}_{count}"
-        # Move the original long taxonomy string to the description field
         record.description = original_id
         SeqIO.write(record, handle_out, "fasta")
 

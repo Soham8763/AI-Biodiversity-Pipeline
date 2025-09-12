@@ -8,8 +8,6 @@ import sys
 # ================================================================= #
 # --- CONFIGURATION ---
 # ================================================================= #
-# --- BEST PRACTICE: Load database credentials from an environment variable ---
-# This keeps your secret connection string out of the code.
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
 METADATA_PATH = "../databases/USGS_eDNA_Deepsearch_metadata.csv"

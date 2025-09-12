@@ -108,16 +108,12 @@ try:
     print("\nRaw BLAST results loaded:")
     print(blast_results.head())
 
-    # --- !!! THIS IS THE CORRECTED SECTION !!! ---
-    # Robustly parse the 'scientific_name' column from the BLAST 'stitle' output.
-    # The previous method was flawed. This is the correct, robust way.
     def clean_stitle(title):
         if ' ' in title:
             return title.split(' ', 1)[1]
         return title
     
     blast_results['scientific_name'] = blast_results['scientific_name'].apply(clean_stitle)
-    # --- !!! END OF CORRECTION !!! ---
     
     blast_results['Cluster_ID'] = blast_results['Cluster_ID_str'].str.replace('Cluster_', '').astype(int)
     blast_results['confidence_level'] = np.where(blast_results['pident'] >= 80.0, 'High', 'Potentially Novel')

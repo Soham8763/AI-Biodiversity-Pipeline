@@ -21,7 +21,6 @@ BLAST_DB_NAME_COI = "midori2_co1_blast_db"
 if MARKER == '18S':
     SEQ_TABLE_PATH = "../03_dada2_output_18s_A/seqtab.tsv"
     FASTA_PATH = "../03_dada2_output_18s_A/asv_sequences.fasta"
-    # Corrected path to reflect your directory structure
     CLUSTER_MAP_PATH = "../05_ai_clustering/18S_A/cluster_map_18S_cnn.csv"
     OUTPUT_DIR = "../06_annotation/18S_A/"
     BLAST_DB_NAME = BLAST_DB_NAME_18S
@@ -64,9 +63,6 @@ SeqIO.write(rep_records, rep_fasta_path, "fasta")
 print(f"Representative sequences saved to: {rep_fasta_path}")
 
 # --- 4. Run BLASTn ---
-# --- !!! THIS IS THE CORRECTED SECTION !!! ---
-# We now construct and use a full, unambiguous, absolute path for the -db argument.
-# This is the most robust way to ensure BLAST can find its files.
 script_dir = os.path.dirname(os.path.realpath(__file__))
 absolute_db_path = os.path.abspath(os.path.join(script_dir, "../databases", BLAST_DB_NAME))
 

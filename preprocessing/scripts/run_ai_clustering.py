@@ -46,7 +46,7 @@ print(f"Output Directory: {OUTPUT_DIR}")
 
 # --- 1. FCGR IMAGE GENERATION ---
 print("\n--- Step 1: Generating FCGR Image Representations ---")
-# Mapping nucleotides to coordinates for the Chaos Game Representation
+# Mapping nucleotides to coordinates for the Frequency Chaos Game Representation
 CGR_COORDS = {'A': np.array([0, 0]), 'C': np.array([0, 1]),
               'G': np.array([1, 1]), 'T': np.array([1, 0]),
               'N': np.array([0.5, 0.5])} # Handle Ns
@@ -77,21 +77,17 @@ print(f"Loaded {len(sequences)} ASV sequences.")
 # Create FCGR images in memory
 fcgr_images = np.array([fcgr(seq, KMER_SIZE) for seq in sequences])
 
-# --- !!! NEW: SAVE THE GENERATED IMAGES TO DISK !!! ---
 if not os.path.exists(IMAGE_SAVE_DIR):
     os.makedirs(IMAGE_SAVE_DIR)
 print(f"Saving {len(asv_ids)} FCGR images to: {IMAGE_SAVE_DIR}")
 for i, asv_id in enumerate(asv_ids):
-    # Use a grayscale colormap and remove axes for a clean image
     plt.imsave(
         os.path.join(IMAGE_SAVE_DIR, f"{asv_id}.png"),
         fcgr_images[i],
         cmap='gray'
     )
-# --- !!! END OF NEW SECTION !!! ---
 
-
-fcgr_images = np.expand_dims(fcgr_images, axis=1) # Add channel dimension
+fcgr_images = np.expand_dims(fcgr_images, axis=1)
 print(f"Generated {fcgr_images.shape[0]} FCGR images of size {fcgr_images.shape[2]}x{fcgr_images.shape[3]}.")
 
 
@@ -152,11 +148,9 @@ for epoch in range(EPOCHS):
 
 print("Training complete.")
 
-# --- !!! NEW: SAVE THE TRAINED MODEL TO DISK !!! ---
 model_path = os.path.join(OUTPUT_DIR, f"cnn_autoencoder_{MARKER}.pth")
 torch.save(model.state_dict(), model_path)
 print(f"Trained model saved to: {model_path}")
-# --- !!! END OF NEW SECTION !!! ---
 
 del dataloader, tensor_data; gc.collect(); torch.cuda.empty_cache()
 
@@ -165,14 +159,12 @@ del dataloader, tensor_data; gc.collect(); torch.cuda.empty_cache()
 print("\n--- Step 3: Extracting Latent Vectors and Clustering ---")
 inference_dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=False)
 latent_vectors_list = []
-model.eval() # Set model to evaluation mode
+model.eval()
 with torch.no_grad():
     for data in inference_dataloader:
         img, _ = data
         img = img.to(device)
-        # Get the latent vectors for the current batch
         batch_vectors = model.encode(img)
-        # Move them back to the CPU and append to our list
         latent_vectors_list.append(batch_vectors.cpu().numpy())
 
 # Combine the batches of vectors into a single large array
@@ -195,4 +187,3 @@ cluster_map = pd.DataFrame({'ASV_ID': asv_ids, 'Cluster_ID': cluster_labels})
 cluster_map.to_csv(output_path, index=False)
 
 print(f"\n--- SUCCESS: GPU-powered cluster map saved to {output_path} ---")
-
