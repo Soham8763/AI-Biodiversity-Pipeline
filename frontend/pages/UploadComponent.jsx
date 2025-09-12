@@ -4,21 +4,20 @@ import axios from 'axios';
 
 const UploadComponent = () => {
   const [isDragOver, setIsDragOver] = useState(false);
-  const [uploadState, setUploadState] = useState('idle'); // idle, uploading, completed, error
+  const [uploadState, setUploadState] = useState('idle');
   const [progress, setProgress] = useState(0);
   const [fileName, setFileName] = useState('');
   const [fileSize, setFileSize] = useState('');
   const [uploadedData, setUploadedData] = useState(null);
   const [isLoadingData, setIsLoadingData] = useState(false);
 
-  // Real API call to fetch database information
   const fetchDatabaseInfo = async () => {
     setIsLoadingData(true);
 
     try {
       console.log('Fetching database information...');
       const response = await axios.get('http://localhost:3001/database-info', {
-        timeout: 30000, // 30 second timeout
+        timeout: 30000,
         headers: {
           'Content-Type': 'application/json',
         }
@@ -30,7 +29,6 @@ const UploadComponent = () => {
     } catch (error) {
       console.error('Error fetching database info:', error);
 
-      // Handle different types of errors
       let errorMessage = 'Failed to fetch database information';
       let errorDetails = '';
 
@@ -38,15 +36,12 @@ const UploadComponent = () => {
         errorMessage = 'Request timed out';
         errorDetails = 'The database server took too long to respond. Please try again.';
       } else if (error.response) {
-        // Server responded with error status
         errorMessage = `Server Error (${error.response.status})`;
         errorDetails = error.response.data?.message || error.response.data?.error || 'Unknown server error';
       } else if (error.request) {
-        // Request was made but no response received
         errorMessage = 'Connection Error';
         errorDetails = 'Could not connect to the database server. Please ensure the server is running on port 3001.';
       } else {
-        // Something else happened
         errorMessage = 'Unexpected Error';
         errorDetails = error.message;
       }
@@ -62,23 +57,21 @@ const UploadComponent = () => {
     }
   };
 
-  // Simulate realistic upload progress with occasional pauses
   const simulateUpload = useCallback((file) => {
     setUploadState('uploading');
     setFileName(file.name);
     setFileSize((file.size / (1024 * 1024)).toFixed(2) + ' MB');
     setProgress(0);
 
-    // Realistic progress simulation with pauses
     const progressSteps = [
       { progress: 5, delay: 200 },
       { progress: 15, delay: 400 },
       { progress: 25, delay: 300 },
-      { progress: 35, delay: 800 }, // Pause here
+      { progress: 35, delay: 800 },
       { progress: 45, delay: 200 },
-      { progress: 55, delay: 600 }, // Another pause
+      { progress: 55, delay: 600 },
       { progress: 65, delay: 300 },
-      { progress: 75, delay: 1200 }, // Longer pause
+      { progress: 75, delay: 1200 },
       { progress: 85, delay: 400 },
       { progress: 95, delay: 500 },
       { progress: 100, delay: 300 }
@@ -93,7 +86,7 @@ const UploadComponent = () => {
           if (step.progress === 100) {
             setTimeout(() => {
               setUploadState('completed');
-              fetchDatabaseInfo(); // Call real API instead of mock data
+              fetchDatabaseInfo();
             }, 500);
           } else {
             currentStep++;

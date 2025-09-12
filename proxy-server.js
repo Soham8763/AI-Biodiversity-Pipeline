@@ -1,30 +1,29 @@
-// proxy-server.js
 const express = require('express');
 const { Client } = require('pg');
 const cors = require('cors');
+const dotenv = require('dotenv');
+dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Enhanced database configuration with better connection settings
 const dbConfig = {
-  connectionString: 'postgresql://neondb_owner:npg_QIM4pDRuBNO6@ep-noisy-night-a1jkftqy.ap-southeast-1.aws.neon.tech/neondb?sslmode=require',
+  connectionString: process.env.DATABASE_URL,
   ssl: {
     rejectUnauthorized: false
   },
-  connectionTimeoutMillis: 10000, // 10 seconds
-  idleTimeoutMillis: 30000, // 30 seconds
-  max: 10, // Maximum number of clients in the pool
+  connectionTimeoutMillis: 10000,
+  idleTimeoutMillis: 30000,
+  max: 10,
 };
 
-// Alternative configuration without connection string (try this if above doesn't work)
 const alternativeDbConfig = {
-  host: 'ep-noisy-night-a1jkftqy.ap-southeast-1.aws.neon.tech',
-  port: 5432,
-  database: 'neondb',
-  user: 'neondb_owner',
-  password: 'npg_QIM4pDRuBNO6',
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT || 5432,
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
   ssl: {
     rejectUnauthorized: false
   },
@@ -32,7 +31,6 @@ const alternativeDbConfig = {
   idleTimeoutMillis: 30000,
 };
 
-// Test endpoint to check database connection
 app.get('/test-connection', async (req, res) => {
   const client = new Client(dbConfig);
 
@@ -85,12 +83,10 @@ app.get('/database-info', async (req, res) => {
     await client.connect();
     console.log('Successfully connected to database');
 
-    // Get database version
     console.log('Fetching database version...');
     const versionResult = await client.query('SELECT version()');
     const fullVersion = versionResult.rows[0].version;
 
-    // Get database name and size
     console.log('Fetching database info...');
     const dbInfoResult = await client.query(`
       SELECT
@@ -113,14 +109,12 @@ app.get('/database-info', async (req, res) => {
 
     console.log(`Found ${tablesResult.rows.length} tables`);
 
-    // Get detailed information for each table
     const tablesWithDetails = [];
 
     for (const table of tablesResult.rows) {
       console.log(`Processing table: ${table.table_name}`);
 
       try {
-        // Get column information
         const columnsResult = await client.query(`
           SELECT
             column_name,
@@ -133,12 +127,10 @@ app.get('/database-info', async (req, res) => {
           ORDER BY ordinal_position
         `, [table.table_name]);
 
-        // Get row count more accurately
         const rowCountResult = await client.query(`
           SELECT COUNT(*) as exact_count FROM "${table.table_name}"
         `);
 
-        // Get sample data (first 3 rows)
         const sampleDataResult = await client.query(`
           SELECT * FROM "${table.table_name}" LIMIT 3
         `);
@@ -162,13 +154,10 @@ app.get('/database-info', async (req, res) => {
       }
     }
 
-    // Calculate total records
     const totalRecords = tablesWithDetails.reduce((sum, table) => sum + (table.rowCount || 0), 0);
 
-    // Check for biodiversity-specific insights
     const biodiversityInsights = {};
 
-    // Look for common biodiversity table patterns
     const asvTable = tablesWithDetails.find(t =>
       t.tableName.toLowerCase().includes('asv') ||
       t.tableName.toLowerCase().includes('otu') ||
@@ -188,7 +177,6 @@ app.get('/database-info', async (req, res) => {
       biodiversityInsights.totalSamples = sampleTable.rowCount;
     }
 
-    // Look for marker types in column names
     const markerTypes = new Set();
     tablesWithDetails.forEach(table => {
       table.columns.forEach(col => {
@@ -210,7 +198,7 @@ app.get('/database-info', async (req, res) => {
       info: {
         databaseName: dbInfoResult.rows[0].database_name,
         databaseSize: dbInfoResult.rows[0].database_size,
-        version: fullVersion.split(' ')[0] + ' ' + fullVersion.split(' ')[1], // Simplified version
+        version: fullVersion.split(' ')[0] + ' ' + fullVersion.split(' ')[1],
         totalTables: tablesWithDetails.length,
         totalRecords: totalRecords
       },
@@ -233,7 +221,6 @@ app.get('/database-info', async (req, res) => {
   } catch (error) {
     console.error('Database operation failed:', error);
 
-    // Provide detailed error information
     const errorResponse = {
       success: false,
       error: true,
@@ -243,7 +230,6 @@ app.get('/database-info', async (req, res) => {
       timestamp: new Date().toISOString()
     };
 
-    // Add specific error handling for common issues
     if (error.code === 'ECONNRESET') {
       errorResponse.suggestion = 'The database connection was reset. This could be due to network issues, SSL configuration, or database server problems.';
     } else if (error.code === 'ENOTFOUND') {
@@ -268,7 +254,6 @@ app.get('/database-info', async (req, res) => {
   }
 });
 
-// Health check endpoint
 app.get('/health', (req, res) => {
   res.json({
     status: 'Server is running',
@@ -277,7 +262,6 @@ app.get('/health', (req, res) => {
   });
 });
 
-// Error handling middleware
 app.use((error, req, res, next) => {
   console.error('Unhandled error:', error);
   res.status(500).json({
