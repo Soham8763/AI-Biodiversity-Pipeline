@@ -19,23 +19,23 @@ REV_PRIMER_18SA="TGATCCTTCTGCAGGTTCACCTAC"
 TRUNCLEN_F_18SA=280 # Set based on FastQC for this marker
 TRUNCLEN_R_18SA=250 # Set based on FastQC for this marker
 
-# --- Group 2: 18S Primer Set B Configuration ---
-MARKER_18SB_NAME="18S_B"
-SRR_LIST_18SB="srr_list_18s_B.txt"
-DADA2_DIR_18SB="../03_dada2_output_18s_B"
-FWD_PRIMER_18SB="GGWACWGGWTGAACWGTWTAYCCYCC" 
-REV_PRIMER_18SB="TAAACTTCAGGGTGACCAAAAAATCA" 
-TRUNCLEN_F_18SB=280 # Set based on FastQC for this marker
-TRUNCLEN_R_18SB=250 # Set based on FastQC for this marker
+# # --- Group 2: 18S Primer Set B Configuration ---
+# MARKER_18SB_NAME="18S_B"
+# SRR_LIST_18SB="srr_list_18s_B.txt"
+# DADA2_DIR_18SB="../03_dada2_output_18s_B"
+# FWD_PRIMER_18SB="GGWACWGGWTGAACWGTWTAYCCYCC" 
+# REV_PRIMER_18SB="TAAACTTCAGGGTGACCAAAAAATCA" 
+# TRUNCLEN_F_18SB=280 # Set based on FastQC for this marker
+# TRUNCLEN_R_18SB=250 # Set based on FastQC for this marker
 
-# --- Group 3: COI Configuration ---
-MARKER_COI_NAME="COI"
-SRR_LIST_COI="srr_list_coi.txt"
-DADA2_DIR_COI="../03_dada2_output_coi"
-FWD_PRIMER_COI="GGWACWGGWTGAACWGTWTAYCCYCC"
-REV_PRIMER_COI="TAAACTTCAGGGTGACCAAAAAATCA"
-TRUNCLEN_F_COI=280 # Set based on FastQC for this marker
-TRUNCLEN_R_COI=220 # Set based on FastQC for this marker
+# # --- Group 3: COI Configuration ---
+# MARKER_COI_NAME="COI"
+# SRR_LIST_COI="srr_list_coi.txt"
+# DADA2_DIR_COI="../03_dada2_output_coi"
+# FWD_PRIMER_COI="GGWACWGGWTGAACWGTWTAYCCYCC"
+# REV_PRIMER_COI="TAAACTTCAGGGTGACCAAAAAATCA"
+# TRUNCLEN_F_COI=280 # Set based on FastQC for this marker
+# TRUNCLEN_R_COI=220 # Set based on FastQC for this marker
 
 mkdir -p "$LOG_DIR"
 echo "--- LAUNCHING PARALLEL DADA2 WORKFLOWS ---"

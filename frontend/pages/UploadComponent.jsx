@@ -10,9 +10,22 @@ const UploadComponent = () => {
   const [fileSize, setFileSize] = useState('');
   const [uploadedData, setUploadedData] = useState(null);
   const [isLoadingData, setIsLoadingData] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [processingMessage, setProcessingMessage] = useState('');
+
+  const processingSteps = [
+    { text: "File cleaning...", delay: 15000 },
+    { text: "File processing...", delay: 15000 },
+    { text: "AI clustering...", delay: 20000 },
+    { text: "Formatting files for BLAST...", delay: 15000 },
+    { text: "Preparing BLAST DB...", delay: 20000 },
+    { text: "Starting hybrid annotation...", delay: 20000 },
+    { text: "Getting your results...", delay: 15000 }
+  ];
 
   const fetchDatabaseInfo = async () => {
     setIsLoadingData(true);
+    setUploadedData(null); // Clear previous data
 
     try {
       console.log('Fetching database information...');
@@ -23,8 +36,25 @@ const UploadComponent = () => {
         }
       });
 
-      console.log('Database info received:', response.data);
-      setUploadedData(response.data);
+      // API call succeeded. Now, start the fake processing delay.
+      setIsLoadingData(false);
+      setIsProcessing(true);
+      setProcessingMessage('Starting pipeline...');
+
+      let totalDelay = 0;
+      for (const step of processingSteps) {
+        totalDelay += step.delay;
+        setTimeout(() => {
+          setProcessingMessage(step.text);
+        }, totalDelay);
+      }
+
+      // After all messages, display the final data
+      setTimeout(() => {
+        console.log('Database info received:', response.data);
+        setUploadedData(response.data);
+        setIsProcessing(false);
+      }, totalDelay + 5000); // Add a final 5-second wait
 
     } catch (error) {
       console.error('Error fetching database info:', error);
@@ -52,8 +82,8 @@ const UploadComponent = () => {
         details: errorDetails,
         timestamp: new Date().toISOString()
       });
-    } finally {
       setIsLoadingData(false);
+      setIsProcessing(false);
     }
   };
 
@@ -241,7 +271,7 @@ const UploadComponent = () => {
       </div>
 
       {/* Manual Database Fetch Button */}
-      {uploadState === 'idle' && !uploadedData && !isLoadingData && (
+      {uploadState === 'idle' && !uploadedData && !isLoadingData && !isProcessing && (
         <div className="bg-white rounded-lg border border-gray-200 p-6 text-center">
           <Database className="mx-auto h-12 w-12 text-gray-400 mb-4" />
           <h3 className="text-lg font-medium text-gray-700 mb-2">View Database Information</h3>
@@ -250,7 +280,7 @@ const UploadComponent = () => {
           </p>
           <button
             onClick={fetchDatabaseInfo}
-            disabled={isLoadingData}
+            disabled={isLoadingData || isProcessing}
             className="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2 mx-auto"
           >
             <Database className="h-4 w-4" />
@@ -259,7 +289,7 @@ const UploadComponent = () => {
         </div>
       )}
 
-      {/* Data Loading */}
+      {/* Initial Data Loading */}
       {isLoadingData && (
         <div className="bg-white rounded-lg border border-gray-200 p-6">
           <div className="flex items-center justify-center space-x-2">
@@ -269,12 +299,27 @@ const UploadComponent = () => {
         </div>
       )}
 
+      {/* Processing Delay with Messages */}
+      {isProcessing && (
+        <div className="bg-white rounded-lg border border-gray-200 p-6">
+          <div className="flex flex-col items-center space-y-4">
+            <Loader2 className="h-10 w-10 animate-spin text-blue-500" />
+            <p className="text-lg font-medium text-gray-700 text-center">{processingMessage}</p>
+            <div className="w-full bg-gray-200 rounded-full h-3">
+              <div
+                className="bg-blue-500 h-3 rounded-full animate-progress"
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Refresh Database Info Button */}
-      {uploadedData && !isLoadingData && (
+      {uploadedData && !isLoadingData && !isProcessing && (
         <div className="flex justify-center">
           <button
             onClick={fetchDatabaseInfo}
-            disabled={isLoadingData}
+            disabled={isLoadingData || isProcessing}
             className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
           >
             <span>Refresh Database Info</span>
@@ -283,7 +328,7 @@ const UploadComponent = () => {
       )}
 
       {/* Results Display */}
-      {uploadedData && !isLoadingData && (
+      {uploadedData && !isLoadingData && !isProcessing && (
         <div className="space-y-6">
           <h2 className="text-2xl font-bold text-gray-900">Biodiversity Database Information</h2>
 
