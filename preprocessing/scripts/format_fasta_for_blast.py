@@ -1,6 +1,7 @@
 from Bio import SeqIO
 import os
 import gzip
+import sys
 
 # ================================================================= #
 # --- CONFIGURATION ---
@@ -8,10 +9,13 @@ import gzip
 # with makeblastdb by creating short, unique IDs.
 # ================================================================= #
 
-# --- CHOOSE WHICH DATABASE TO PROCESS ---
-# Options: "PR2" or "MIDORI2"
-DATABASE_TO_PROCESS = "PR2" # <--- EDIT THIS to "MIDORI2" for the second run
-# ================================================================= #
+if len(sys.argv) != 2:
+    print("\nUsage: python format_fasta_for_blast.py <DATABASE_NAME>")
+    print("   Example: python format_fasta_for_blast.py PR2")
+    print("   Example: python format_fasta_for_blast.py MIDORI2\n")
+    sys.exit(1)
+
+DATABASE_TO_PROCESS = sys.argv[1].upper()
 
 # create directories if they don't already exist
 os.makedirs("../databases/midori2_blast", exist_ok=True)

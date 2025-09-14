@@ -5,12 +5,18 @@ from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 import subprocess
 import os
+import sys
 
 # ================================================================= #
 # --- CONFIGURATION ---
 # ================================================================= #
-# CHOOSE YOUR MARKER: '18S' or 'COI'
-MARKER = 'COI' # <--- CHANGE THIS TO 'COI' FOR THE SECOND RUN
+if len(sys.argv) != 2:
+    print("\nUsage: python hybrid_annotation.py <MARKER>")
+    print("   Example: python hybrid_annotation.py 18S")
+    print("   Example: python hybrid_annotation.py COI\n")
+    sys.exit(1)
+
+MARKER = sys.argv[1].upper() # Read marker from command line
 
 # --- Use the base names you gave to 'makeblastdb' in the previous step ---
 BLAST_DB_NAME_18S = "pr2_blast_db" 
@@ -38,12 +44,14 @@ if MARKER == '18S':
     CLUSTER_MAP_PATH = "../05_ai_clustering/18S_A/cluster_map_18S_cnn.csv"
     OUTPUT_DIR = "../06_annotation/18S_A/"
     BLAST_DB_NAME = BLAST_DB_NAME_18S
+    BLAST_NAME = "pr2_blast"
 elif MARKER == 'COI':
     SEQ_TABLE_PATH = "../03_dada2_output_coi/seqtab.tsv"
     FASTA_PATH = "../03_dada2_output_coi/asv_sequences.fasta"
     CLUSTER_MAP_PATH = "../05_ai_clustering/COI/cluster_map_COI_cnn.csv"
     OUTPUT_DIR = "../06_annotation/COI/"
     BLAST_DB_NAME = BLAST_DB_NAME_COI
+    BLAST_NAME = "midori2_blast"
 else:
     raise ValueError("Marker must be '18S' or 'COI'")
 
@@ -80,7 +88,7 @@ print(f"Representative sequences saved to: {rep_fasta_path}")
 
 # --- 4. Run BLASTn ---
 script_dir = os.path.dirname(os.path.realpath(__file__))
-absolute_db_path = os.path.abspath(os.path.join(script_dir, "../databases/midori2_blast", BLAST_DB_NAME))
+absolute_db_path = os.path.abspath(os.path.join(script_dir, f"../databases/{BLAST_NAME}", BLAST_DB_NAME))
 
 print(f"Verifying BLAST database exists at: {absolute_db_path}.nsq")
 if not os.path.exists(f"{absolute_db_path}.nsq"):
@@ -116,7 +124,7 @@ try:
     blast_results['scientific_name'] = blast_results['scientific_name'].apply(clean_stitle)
     
     blast_results['Cluster_ID'] = blast_results['Cluster_ID_str'].str.replace('Cluster_', '').astype(int)
-    blast_results['confidence_level'] = np.where(blast_results['pident'] >= 80.0, 'High', 'Potentially Novel')
+    blast_results['confidence_level'] = np.where(blast_results['pident'] >= 97.0, 'High', 'Potentially Novel')
     
     print("\nProcessed BLAST results before merging:")
     print(blast_results.head())

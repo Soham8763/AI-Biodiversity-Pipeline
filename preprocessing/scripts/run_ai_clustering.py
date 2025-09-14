@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt # <-- ADDED FOR IMAGE SAVING
 # --- CONFIGURATION ---
 # ================================================================= #
 # CHOOSE YOUR MARKER: '18S' or 'COI'
-MARKER = 'COI' # <--- CHANGE THIS LINE TO 'COI' TO RUN THE OTHER DATASET
+MARKER = '18S' # <--- CHANGE THIS LINE TO 'COI' TO RUN THE OTHER DATASET
 # ================================================================= #
 
 
